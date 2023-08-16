@@ -51,12 +51,7 @@ logger.add(
     level=config.LOGGER_LEVEL,
     colorize=True,
     filter=correlation_id_filter,
-<<<<<<< Updated upstream
-    # format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",
-    format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {name}:{function}:{line} - {message}",
-=======
     format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",
->>>>>>> Stashed changes
     enqueue=True
 )
 
@@ -69,12 +64,7 @@ logger.add(
     rotation=config.LOGGER_ROTATION,
     # retention=config.LOGGER_RETENTION,
     filter=correlation_id_filter,
-<<<<<<< Updated upstream
-    # format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",
-    format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {name}:{function}:{line} - {message}",
-=======
     format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",
->>>>>>> Stashed changes
     enqueue=True
 )
 

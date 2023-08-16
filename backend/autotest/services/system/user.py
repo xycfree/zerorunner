@@ -114,11 +114,8 @@ class UserService:
         :return:
         """
         if not params.id:
-<<<<<<< Updated upstream
             if await User.get_user_by_name(params.username):
-=======
-            if User.get_user_by_name(params.username):
->>>>>>> Stashed changes
+            # if User.get_user_by_name(params.username):
                 raise ValueError('用户昵称已存在！')
         else:
             user_info = await User.get(params.id, to_dict=True)
