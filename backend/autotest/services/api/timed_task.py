@@ -23,7 +23,7 @@ class CrontabService:
 
         cron = celery_crontab(*params.crontab.split(" "))
         crontab_query_params = {
-            'minute': cron._orig_hour,
+            'minute': cron._orig_minute,
             'hour': cron._orig_hour,
             'day_of_week': cron._orig_day_of_week,
             'day_of_month': cron._orig_day_of_month,
@@ -175,3 +175,13 @@ class TimedTasksService:
         task_info = await TimedTask.create_or_update(task_info_data)
         await PeriodicTaskChanged.update_changed()
         return task_info
+
+    @staticmethod
+    async def get_count_by_user():
+        """获取用户api数量"""
+        user_info = await current_user()
+        count_info = await TimedTask.get_count_by_user_id(user_info.get("id", None))
+        if not count_info:
+            return 0
+        if count_info:
+            return count_info.get("count", 0)
