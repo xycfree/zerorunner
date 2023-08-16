@@ -1,5 +1,6 @@
 import typing
 
+from loguru import logger
 from sqlalchemy import Column, Boolean, DateTime, Integer, func, select, update, delete, insert, Select, \
     Executable, Result, String, ClauseList
 from sqlalchemy.ext.asyncio import AsyncSession

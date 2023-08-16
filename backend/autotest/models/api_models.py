@@ -13,6 +13,7 @@ from autotest.schemas.api.functions import FuncQuery
 from autotest.schemas.api.module import ModuleQuery
 from autotest.schemas.api.projectquery import ProjectQuery
 from autotest.schemas.api.api_report import TestReportQuery, TestReportDetailQuery
+from loguru import logger
 
 
 class ProjectInfo(Base):
@@ -32,6 +33,7 @@ class ProjectInfo(Base):
     @classmethod
     async def get_list(cls, params: ProjectQuery):
         q = [cls.enabled_flag == 1]
+
         if params.name:
             q.append(cls.name.like('%{}%'.format(params.name)))
         if params.created_by_name:
@@ -40,9 +42,10 @@ class ProjectInfo(Base):
             q.append(cls.id == params.id)
         if params.ids:
             q.append(cls.id.in_(params.ids))
-        u = aliased(User)
+        # logger.info(f"q: {q[0]}, {q[1]}")  # q: project_info.enabled_flag = :enabled_flag_1, project_info.name LIKE :name_1
+        u = aliased(User)  # 申明表别名
         stmt = select(cls.get_table_columns(),
-                      u.nickname.label('updated_by_name'),
+                      u.nickname.label('updated_by_name'),  # 通过别名增加字段
                       User.nickname.label('created_by_name')) \
             .where(*q) \
             .join(u, u.id == cls.updated_by) \
@@ -93,11 +96,11 @@ class ModuleInfo(Base):
     project_id = Column(Integer, nullable=False, comment='归属项目id')
     config_id = Column(Integer, nullable=True, comment='关联配置id')
     test_user = Column(String(100), nullable=False, comment='测试负责人')
-    simple_desc = Column(String(100), nullable=False, comment='简要描述')
-    remarks = Column(String(100), nullable=False, comment='其他信息')
-    module_packages = Column(String(64), nullable=False, comment='模块对应的包名称', index=True)
+    simple_desc = Column(String(100), nullable=True, comment='简要描述')
+    remarks = Column(String(100), nullable=True, comment='其他信息')
+    module_packages = Column(String(64), nullable=True, comment='模块对应的包名称', index=True)
     leader_user = Column(String(100), nullable=False, comment='负责人')
-    priority = Column(Integer, nullable=False, comment='默认执行用例优先级', default=4)
+    priority = Column(Integer, nullable=True, comment='默认执行用例优先级', default=4)
 
     # packages_id = Column(Integer, nullable=False, comment='包id')
 

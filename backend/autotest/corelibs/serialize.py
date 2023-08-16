@@ -10,7 +10,7 @@ T = typing.TypeVar("T", Select, "Query[Any]")
 
 
 def count_query(query: Select) -> Select:
-    """
+    """ 查询SQL总数
     获取count sql
     :param query: sql
     :return:

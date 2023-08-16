@@ -3,6 +3,7 @@
 from contextvars import ContextVar
 import typing
 
+# https://github.com/pallets/werkzeug/blob/main/src/werkzeug/local.py  创建上下文本地数据的名称空间。
 
 class Local:
     __slots__ = ("_storage",)

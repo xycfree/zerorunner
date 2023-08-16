@@ -18,8 +18,11 @@ class Configs(BaseSettings):
     PROJECT_VERSION: typing.Union[int, str] = __version__  # 版本
     BASE_URL: AnyHttpUrl = "http://127.0.0.1:8100"  # 开发环境
 
+    # dir
+    BASEDIR: str = os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
     API_PREFIX: str = "/api"  # 接口前缀
-    STATIC_DIR: str = 'static'  # 静态文件目录
+    STATIC_DIR: str = os.path.join(BASEDIR, 'static')  # 静态文件目录
     GLOBAL_ENCODING: str = 'utf8'  # 全局编码
     CORS_ORIGINS: typing.List[typing.Any] = ["*"]  # 跨域请求
     WHITE_ROUTER = ["/api/user/login"]  # 路由白名单，不需要鉴权
@@ -42,8 +45,7 @@ class Configs(BaseSettings):
     LOGGER_ROTATION: str = "10 MB"  # 日志分片: 按 时间段/文件大小 切分日志. 例如 ["500 MB" | "12:00" | "1 week"]
     LOGGER_RETENTION: str = "7 days"  # 日志保留的时间: 超出将删除最早的日志. 例如 ["1 days"]
 
-    # dir
-    BASEDIR: str = os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
 
     # job
     broker_url: str = Field(..., env="CELERY_BROKER_URL")
@@ -89,3 +91,5 @@ class Configs(BaseSettings):
 
 
 config = Configs()
+
+

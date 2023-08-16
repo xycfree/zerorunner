@@ -3,6 +3,8 @@ import json
 from fastapi import APIRouter
 from loguru import logger
 
+from autotest.corelibs import codes, g
+from autotest.corelibs.codes import CodeEnum
 from autotest.corelibs.http_response import partner_success
 from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema
 from autotest.services.api.api_info import ApiInfoService
@@ -83,11 +85,11 @@ def postman2case():
     postman 文件转用例
     :return:
     """
-    postman_file = request.files.get('file', None)
+    postman_file = g.request.files.get('file', None)
     if not postman_file:
-        return partner_success(code=codes.PARTNER_CODE_FAIL, msg='请选择导入的postman，json文件！')
+        return partner_success(code=CodeEnum.PARTNER_CODE_FAIL.code, msg='请选择导入的postman，json文件！')
     if postman_file.filename.split('.')[-1] != 'json':
-        return partner_success(code=codes.PARTNER_CODE_FAIL, msg='请选择json文件导入！')
+        return partner_success(code=CodeEnum.PARTNER_CODE_FAIL.code, msg='请选择json文件导入！')
     json_body = json.load(postman_file)
-    data = ApiInfoService.postman2api(json_body, **request.form)
+    data = ApiInfoService.postman2api(json_body, **g.request.form)
     return partner_success(data)

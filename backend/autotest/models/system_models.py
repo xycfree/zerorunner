@@ -10,7 +10,7 @@ from autotest.models.base import Base
 from autotest.schemas.system.lookup import LookupQuery, LookupValueQuery
 from autotest.schemas.system.roles import RoleQuery
 from autotest.schemas.system.user import UserQuery, UserLoginRecordQuery
-
+from loguru import logger
 
 class User(Base):
     """用户表"""
@@ -24,8 +24,8 @@ class User(Base):
     nickname = Column(String(255), nullable=False, comment='用户昵称')
     user_type = Column(Integer, nullable=False, comment='用户类型 10 管理人员, 20 测试人员', default=20)
     remarks = Column(String(255), nullable=False, comment='用户描述')
-    avatar = Column(Text, nullable=False, comment='头像')
-    tags = Column(JSON, nullable=False, comment='标签')
+    avatar = Column(Text, nullable=True, comment='头像')
+    tags = Column(JSON, nullable=True, comment='标签')
 
     @classmethod
     async def get_list(cls, params: UserQuery):

@@ -3,12 +3,16 @@ from fastapi import APIRouter
 from autotest.corelibs.http_response import partner_success
 from autotest.schemas.api.projectquery import ProjectQuery, ProjectIn, ProjectId
 from autotest.services.api.project import ProjectService
+from loguru import logger
+from autotest.corelibs import g
 
 router = APIRouter()
 
 
 @router.post('/list', description="项目列表")
 async def project_list(params: ProjectQuery):
+    logger.info(f"project list params: {params}")
+    logger.info(f"request: {await g.request.json()}")
     data = await ProjectService.list(params)
     return partner_success(data)
 
@@ -21,6 +25,7 @@ async def get_all_project():
 
 @router.post('/saveOrUpdate', description="更新保存项目")
 async def save_or_update(params: ProjectIn):
+    logger.info(f"project saveOrUpdate: {params}")
     data = await ProjectService.save_or_update(params)
     return partner_success(data)
 

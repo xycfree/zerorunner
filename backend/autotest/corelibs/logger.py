@@ -33,21 +33,41 @@ def correlation_id_filter(record):
     record['trace_id'] = g.trace_id
     return record
 
+def info_filter(record):
+    return 50 >= record["level"].no >= 20
+
+
+def err_filter(record):
+    return record["level"].no >= 40
+
+
 
 # 详见: https://loguru.readthedocs.io/en/stable/overview.html#features
 fmt = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green>| {thread} | <level>{level: <8}</level> | <yellow> {trace_id} </yellow> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | <level>{message}</level>"
 logger.remove()
 logger.add(
-    # logger_file(),
     sys.stdout,
     # encoding=config.GLOBAL_ENCODING,
     level=config.LOGGER_LEVEL,
     colorize=True,
-    # rotation=config.LOGGER_ROTATION,
+    filter=correlation_id_filter,
+    # format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",
+    format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {name}:{function}:{line} - {message}",
+    enqueue=True
+)
+
+logger.add(
+    sink=logger_file(),
+    # sys.stdout,
+    encoding=config.GLOBAL_ENCODING,
+    level=config.LOGGER_LEVEL,
+    colorize=True,
+    rotation=config.LOGGER_ROTATION,
     # retention=config.LOGGER_RETENTION,
     filter=correlation_id_filter,
-    format=fmt,
-    # enqueue=True
+    # format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",
+    format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level} | {name}:{function}:{line} - {message}",
+    enqueue=True
 )
 
 
@@ -65,7 +85,6 @@ class InterceptHandler(logging.Handler):
 
 def init_logger():
     logger_name_list = [name for name in logging.root.manager.loggerDict]
-
     for logger_name in logger_name_list:
         """获取所有logger"""
         effective_level = logging.getLogger(logger_name).getEffectiveLevel()

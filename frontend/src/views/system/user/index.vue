@@ -34,7 +34,7 @@ import {useRolesApi} from "/@/api/useSystemApi/roles";
 interface TableDataRow {
   id: number;
   username: string;
-  email: string;
+  ema5il: string;
   roles: string;
   status: boolean;
   nickname: string;

@@ -19,6 +19,7 @@ engine = create_async_engine(
     max_overflow=20,  # 队列池最大溢出个数
     pool_pre_ping=True,  # 将启用连接池“预ping”功能，该功能在每次签出时测试连接的活跃度
     pool_recycle=7200,  # 2个小时回收线程
+    future=True,
 )
 
 # 操作表会话
@@ -34,7 +35,7 @@ async_session = async_scoped_session(async_session_factory, scopefunc=current_ta
 
 
 def provide_session(func: typing.Callable):
-    """
+    """ 提供session 使用完并关闭
     :param func: 函数
     :return:
     """
@@ -43,7 +44,8 @@ def provide_session(func: typing.Callable):
     async def wrapper(*args, **kwargs):
         arg_session = 'session'
 
-        func_params = func.__code__.co_varnames
+        func_params = func.__code__.co_varnames  # 获取方法的参数
+        # logger.info(f"func_params: {func_params}")  # ('query', 'page', 'page_size', 'session', 'request_json', 'total', 'result', 'total_page', 'pagination')
         session_in_args = arg_session in func_params and func_params.index(arg_session) < len(args)
         session_in_kwargs = arg_session in kwargs
 

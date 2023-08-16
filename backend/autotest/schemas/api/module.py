@@ -15,7 +15,7 @@ class ModuleIn(BaseModel):
     simple_desc: str = Field(None, description="简要描述")
     remarks: str = Field(None, description="其他信息'")
     config_id: int = Field(None, description="关联配置id'")
-    priority: int = Field(None, description="优先级'")
+    # priority: int = Field(None, description="优先级'")
 
 
 class ModuleQuery(BaseSchema):

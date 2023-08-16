@@ -8,6 +8,8 @@ from autotest.corelibs.codes import CodeEnum
 from autotest.corelibs.http_response import partner_success
 from autotest.schemas.system.user import UserLogin, UserQuery, UserIn, UserResetPwd, UserDel
 from autotest.services.system.user import UserService
+from loguru import logger
+
 
 router = APIRouter()
 
@@ -36,6 +38,7 @@ async def save_or_update(user_params: UserIn):
     更新保存用户
     :return:
     """
+    logger.info(f"user_params: {user_params}")
     await UserService.save_or_update(user_params)
     return partner_success()
 
@@ -53,6 +56,7 @@ async def get_user_info(request: Request):
 
 @router.post('/userRegister', description="新增用户")
 async def user_register(user_info: UserIn):
+    logger.info(f"user_info:{user_info}")
     data = await UserService.user_register(user_info)
     return partner_success(data)
 

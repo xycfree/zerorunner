@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from loguru import logger
 
 from autotest.corelibs.http_response import partner_success
 from autotest.schemas.api.module import ModuleQuery, ModuleIn, ModuleId
@@ -21,6 +22,7 @@ async def get_all_module():
 
 @router.post('/saveOrUpdate', description="更新保存项目")
 async def save_or_update(params: ModuleIn):
+    logger.info(f"ModuleIn: {params}")
     data = await ModuleService.save_or_update(params)
     return partner_success(data)
 

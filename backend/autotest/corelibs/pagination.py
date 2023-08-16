@@ -10,7 +10,7 @@ from autotest.corelibs import g
 from autotest.corelibs.consts import DEFAULT_PAGE, DEFAULT_PER_PAGE
 from autotest.db.session import provide_session
 from autotest.corelibs.serialize import count_query, paginate_query, unwrap_scalars
-
+from loguru import logger
 
 @provide_session
 async def parse_pagination(
@@ -27,7 +27,8 @@ async def parse_pagination(
     :return:
     """
     if g.request.method == 'POST':
-        request_json = await g.request.json()
+        request_json = await g.request.json()  # 获取请求上下文
+        # logger.info(f"request_json: {request_json}")
         page = int(request_json.get('page', DEFAULT_PAGE)) if not page else page
         page_size = min(int(request_json.get('pageSize', DEFAULT_PER_PAGE)), 1000) if not page_size else page_size
     else:
