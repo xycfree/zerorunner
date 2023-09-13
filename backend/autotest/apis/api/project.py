@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
+from autotest.utils.local import g
 from autotest.utils.response.http_response import partner_success
 from autotest.schemas.api.projectquery import ProjectQuery, ProjectIn, ProjectId
 from autotest.services.api.project import ProjectService
 from loguru import logger
-from autotest.corelibs import g
 
 router = APIRouter()
 
