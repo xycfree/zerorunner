@@ -1,16 +1,16 @@
 import typing
-
-from loguru import logger
-from sqlalchemy import Column, Boolean, DateTime, Integer, func, select, update, delete, insert, Select, \
-    Executable, Result, String, ClauseList
+from math import ceil
+from sqlalchemy import Column, Boolean, DateTime, func, select, update, delete, insert, Select, \
+    Executable, Result, String, ClauseList, BigInteger
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative
-from autotest.corelibs import g
-from autotest.corelibs.pagination import parse_pagination
+
 from autotest.db.session import provide_session
 from autotest.exceptions.exceptions import AccessTokenFail
+from autotest.utils.consts import DEFAULT_PAGE, DEFAULT_PER_PAGE
 from autotest.utils.current_user import current_user
-from autotest.corelibs.serialize import unwrap_scalars
+from autotest.utils.local import g
+from autotest.utils.serialize import unwrap_scalars, count_query, paginate_query
 
 
 @as_declarative()
@@ -32,21 +32,23 @@ class Base:
     #     """将类名小写并转化为表名 __tablename__"""
     #     return cls.__name__.lower()
 
-    id = Column(Integer(), nullable=False, primary_key=True, autoincrement=True)
+    id = Column(BigInteger(), nullable=False, primary_key=True, autoincrement=True, comment='主键')
     creation_date = Column(DateTime(), default=func.now(), comment='创建时间')
-    created_by = Column(Integer, nullable=True, comment='创建人ID')
+    created_by = Column(BigInteger, nullable=True, comment='创建人ID')
     updation_date = Column(DateTime(), default=func.now(), onupdate=func.now(), nullable=True, comment='更新时间')
-    updated_by = Column(Integer, nullable=True, comment='更新人ID')
+    updated_by = Column(BigInteger, nullable=True, comment='更新人ID')
     enabled_flag = Column(Boolean(), default=1, nullable=False, comment='是否删除, 0 删除 1 非删除')
     trace_id = Column(String(255), nullable=True, comment="trace_id")
 
     @classmethod
-    async def get(cls, id: typing.Union[int, str], to_dict=False) -> typing.Union["Base", typing.Dict]:
+    async def get(cls, id: typing.Union[int, str], to_dict=False) -> typing.Union["Base", typing.Dict, None]:
         """
         :param id: 查询id
         :param to_dict: 转字典
         :return: 模型对象 <models...>
         """
+        if not id:
+            return None
         sql = select(cls).where(cls.id == id, cls.enabled_flag == 1)
         result = await cls.execute(sql)
         data = result.scalar()
@@ -71,7 +73,10 @@ class Base:
         params = {key: value for key, value in params.items() if hasattr(cls, key)}
         id = params.get("id", None)
         params = await cls.handle_params(params)
-        if id:
+        exist_data = await cls.get(id)
+        # if not id:
+        #     params["id"] = IDCenter.get_id()
+        if exist_data:
             stmt = update(cls).where(cls.id == id).values(**params)
         else:
             stmt = insert(cls).values(**params)
@@ -218,3 +223,41 @@ class Base:
         result = await cls.execute(stmt)
         data = result.first() if first else result.fetchall()
         return unwrap_scalars(data) if data else None
+
+
+@provide_session
+async def parse_pagination(
+        query: select,
+        page: int = None,
+        page_size: int = None,
+        session: AsyncSession = None) -> typing.Dict[str, typing.Any]:
+    """
+    统一分页处理
+    :param query: query
+    :param page: query
+    :param page_size: query
+    :param session: session db会话
+    :return:
+    """
+    if g.request.method == 'POST':
+        request_json = await g.request.json()
+        page = int(request_json.get('page', DEFAULT_PAGE)) if not page else page
+        page_size = min(int(request_json.get('pageSize', DEFAULT_PER_PAGE)), 1000) if not page_size else page_size
+    else:
+        page = g.request.args.get('page', type=int, default=DEFAULT_PAGE) if not page else page
+        page_size = min(g.request.args.get('pageSize', type=int, default=DEFAULT_PER_PAGE),
+                        1000) if not page_size else page_size
+
+    (total,) = (await session.execute(count_query(query))).scalars()
+    result = (await session.execute(paginate_query(query, page=page, page_size=page_size))).fetchall()
+    result = unwrap_scalars(result)
+    total_page = int(ceil(float(total) / page_size))
+    pagination = {
+        'rowTotal': total,
+        'pageSize': page_size,
+        'page': page,
+        'pageTotal': total_page,
+        'rows': result,
+    }
+
+    return pagination

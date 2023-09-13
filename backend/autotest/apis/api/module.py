@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from loguru import logger
 
-from autotest.corelibs.http_response import partner_success
+from autotest.utils.response.http_response import partner_success
 from autotest.schemas.api.module import ModuleQuery, ModuleIn, ModuleId
 from autotest.services.api.module import ModuleService
 

@@ -103,4 +103,4 @@ class InvalidSystemClock(Exception):
     pass
 
 
-id_center = IdCenter(1, 2, 0)
+IDCenter = IdCenter(1, 2, 0)

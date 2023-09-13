@@ -266,6 +266,8 @@ const initData = async () => {
   if (route.query.id) {
     let {data} = await useApiCaseApi().getCaseInfo({id: route.query.id})
     state.form = data
+  } else {
+    state.form = createForm()
   }
 }
 
@@ -293,7 +295,7 @@ const getProjectList = async () => {
 
 };
 
-// 新增
+// 新增修改
 const saveOrUpdate = () => {
   if (!state.form.project_id) {
     ElMessage.warning('请选择所属项目！');
@@ -310,7 +312,9 @@ const saveOrUpdate = () => {
   state.form.variables = handleEmpty(state.form.variables)
   state.form.headers = handleEmpty(state.form.headers)
   useApiCaseApi().saveOrUpdate(state.form)
-      .then(() => {
+      .then((res:any) => {
+        state.form.id = res.data.id
+        state.form.version = res.data.version
         ElMessage.success('操作成功');
       })
 };
