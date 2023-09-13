@@ -1,9 +1,14 @@
 import typing
 import uuid
+from copy import copy
+
+from loguru import logger
 
 from autotest.exceptions.exceptions import ParameterError
-from autotest.models.api_models import ApiInfo
+from autotest.models.api_models import ApiInfo, ApiCase
+from autotest.schemas.api.api_case import ApiCaseIn
 from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema
+from autotest.services.api.api_case import ApiCaseService
 from autotest.services.api.run_handle_new import HandelRunApiStep
 from autotest.services.api.api_report import ReportService
 from autotest.corelibs.serialize import default_serialize
@@ -96,8 +101,8 @@ class ApiInfoService:
         :param kwargs:
         :return:
         """
-        case_info = await ApiInfo.get(params.id)
-        run_params = ApiInfoIn(**default_serialize(case_info), env_id=params.env_id)
+        case_info = await ApiInfo.get(params.id)  # 接口信息
+        run_params = ApiInfoIn(**default_serialize(case_info), env_id=params.env_id)  # 数据序列化
         case_info = await HandelRunApiStep().init(run_params)
         runner = ZeroRunner()
         summary = runner.run_tests(case_info.get_testcase())
@@ -119,17 +124,18 @@ class ApiInfoService:
         :param params:
         :return:
         """
+        logger.info(f"debug_api params:{params}")
         case_info = await HandelRunApiStep().init(params)
         runner = ZeroRunner()
         print(id(runner))
         summary = runner.run_tests(case_info.get_testcase())
-
+        logger.info(f"debug_api summary: {summary}")
         return summary
 
     @staticmethod
     def postman2api(json_body: typing.Dict, **kwargs):
         """postman 转 api"""
-        coll = Collection(json_body)
+        coll = typing.Collection(json_body)
         coll.make_test_case()
         for testcase in coll.case_list:
             case = {
@@ -157,3 +163,40 @@ class ApiInfoService:
             return 0
         if count_info:
             return count_info.get("count", 0)
+
+    @staticmethod
+    async def update_case_info(params: ApiInfoIn, name: str):
+        """
+        更新保存测试用例/配置
+        :param name: api_info.name 接口原名称
+        :param params: 接口更新数据
+        :return:
+        """
+
+        api_info = await ApiInfo.get(params.id)
+        if not api_info:
+            raise ParameterError("用例不存在!")
+
+        api_case = await ApiCase.get_case_by_project_id(params.project_id, name)
+
+        for info in api_case:
+            _temp = []
+            ids = [t.get('name') for t in info.get("step_data")]
+            logger.debug(f"ids: {ids}")
+            if not ids:
+                continue
+            if name in ids:
+                for t in info.get("step_data"):
+                    tt = copy(t)
+                    if name == tt["name"]:
+                        tt['name'] = api_info.name
+                        tt['request']['name'] = api_info.name
+                        tt['request']['method'] = api_info.method
+                    _temp.append(tt)
+
+            # 更新api_case.step_data.name and api_case.step_data.request
+            if _temp:
+                _info = copy(info)
+                _info['step_data'] = _temp
+                await ApiCaseService.update_case(ApiCaseIn.parse_obj(_info))
+

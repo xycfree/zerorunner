@@ -49,6 +49,7 @@ def get_req_resp_record(resp_obj: Response) -> ReqRespData:
     request_cookies = resp_obj.request._cookies.get_dict()
 
     request_body = resp_obj.request.body
+    # logger.debug(f"request body: {request_body}")
     if request_body is not None:
         try:
             request_body = json.loads(request_body)
@@ -194,7 +195,10 @@ class HttpSession(requests.Session):
         #     kwargs["data"] = kwargs["data"].encode("utf-8")
 
         start_timestamp = time.time()
+        # logger.debug(f"请求url:{url}, kw:{kwargs}\n")
         response = self._send_request_safe_mode(method, url, **kwargs)
+        # logger.debug(f"响应结果:{response.content.decode('utf-8')}\n")
+
         response_time_ms = round((time.time() - start_timestamp) * 1000, 2)
 
         try:
@@ -228,7 +232,7 @@ class HttpSession(requests.Session):
         try:
             response.raise_for_status()
         except RequestException as ex:
-            logger.error(f"{str(ex)}")
+            logger.error(f"请求异常:{str(ex)}")
             raise RequestException(ex)
         else:
             logger.info(

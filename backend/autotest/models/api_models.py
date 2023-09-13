@@ -13,6 +13,7 @@ from autotest.schemas.api.functions import FuncQuery
 from autotest.schemas.api.module import ModuleQuery
 from autotest.schemas.api.projectquery import ProjectQuery
 from autotest.schemas.api.api_report import TestReportQuery, TestReportDetailQuery
+
 from loguru import logger
 
 
@@ -419,6 +420,20 @@ class ApiCase(Base):
     async def get_case_by_ids(cls, ids: typing.List[int]):
         """根据套件ids查询用例"""
         stmt = select(cls.get_table_columns()).where(cls.id.in_(ids), cls.enabled_flag == 1)
+        return await cls.get_result(stmt)
+
+    @classmethod
+    async def get_case_by_project_id(cls, project_id: int, name: str):
+        """
+        :param project_id: 项目id
+        :param name: 接口名称 api_info.name
+        :return:
+            查询json字段里 list数组数据
+            SELECT * FROM api_case WHERE JSON_CONTAINS(step_data, JSON_OBJECT("name", "终端概况"));
+        """
+        stmt = select(cls.get_table_columns()).where(cls.project_id == project_id,
+                                                     func.json_contains(cls.step_data, func.json_object('name', name)))
+                                                     # text(f'JSON_CONTAINS(step_data, JSON_OBJECT("name", "{name}"))'))
         return await cls.get_result(stmt)
 
     @classmethod

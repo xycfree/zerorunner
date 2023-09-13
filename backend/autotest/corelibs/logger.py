@@ -48,7 +48,7 @@ logger.remove()
 logger.add(
     sys.stdout,
     # encoding=config.GLOBAL_ENCODING,
-    level=config.LOGGER_LEVEL,
+    level="DEBUG",
     colorize=True,
     filter=correlation_id_filter,
     format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {trace_id} | {level} | {name}:{function}:{line} - {message}",

@@ -6,6 +6,7 @@ from loguru import logger
 from autotest.corelibs import codes, g
 from autotest.corelibs.codes import CodeEnum
 from autotest.corelibs.http_response import partner_success
+from autotest.models.api_models import ApiInfo
 from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema
 from autotest.services.api.api_info import ApiInfoService
 from autotest.utils import current_user
@@ -32,7 +33,21 @@ async def get_case_info(params: ApiId):
 
 @router.post('/saveOrUpdate', description="更新保存接口")
 async def save_or_update(params: ApiInfoIn):
+    """ 接口更新或新增
+    :param params:
+    :return:
+    """
+    try:
+        old_api_info = await ApiInfo.get_api_by_id(params.id)
+    except:
+        logger.debug("获取old_api_info失败，接口数据新增...")
+        old_api_info = {}
+
     case_info = await ApiInfoService.save_or_update(params)
+
+    if old_api_info:
+        await ApiInfoService.update_case_info(params, name=old_api_info.get("name"))
+
     return partner_success(case_info)
 
 

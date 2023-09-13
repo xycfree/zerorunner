@@ -44,8 +44,11 @@ python main.py
 #  windows 启动，只能单线程 zerorunner/backend 目录下执行
 job -A celery_worker.worker.job worker --pool=solo -l INFO 
 
+celery -A celery_worker.worker  worker --pool=solo -l INFO 
+
+
 # linux 启动
-elery -A celery_worker.worker.job worker --loglevel=INFO -c 10 -P solo -n zerorunner-job-worker
+celery -A celery_worker.worker.job worker --loglevel=INFO -c 10 -P solo -n zerorunner-job-worker
 
 # 定时任务启动
 job -A celery_worker.worker.job beat -S celery_worker.scheduler.schedulers:DatabaseScheduler -l INFO

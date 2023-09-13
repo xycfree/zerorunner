@@ -35,7 +35,6 @@ async def parse_pagination(
         page = g.request.args.get('page', type=int, default=DEFAULT_PAGE) if not page else page
         page_size = min(g.request.args.get('pageSize', type=int, default=DEFAULT_PER_PAGE),
                         1000) if not page_size else page_size
-
     (total,) = (await session.execute(count_query(query))).scalars()
     result = (await session.execute(paginate_query(query, page=page, page_size=page_size))).fetchall()
     result = unwrap_scalars(result)

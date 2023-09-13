@@ -187,7 +187,7 @@ class ResponseObjectBase(object):
                 raise ValueError(f"提取类型{extractor.extract_type}错误！")
             extract_mapping[extractor.name] = field_value
 
-        logger.info(f"extract mapping: {extract_mapping}")
+        logger.info(f"提取数据extract mapping: {extract_mapping}")
         return extract_mapping
 
     def _search_jmespath(self, expr: str) -> typing.Any:
@@ -200,9 +200,11 @@ class ResponseObjectBase(object):
         }
         if not expr.startswith(tuple(resp_obj_meta.keys())):
             return expr
-
+        # logger.debug(f"提取数据path expr: {expr}")
+        # logger.debug(f"响应数据resp_obj_meta: {resp_obj_meta}")
         try:
             check_value = jmespath.search(expr, resp_obj_meta)
+            logger.debug(f"提取数据expr:{expr}, check_value: {check_value}")
         except JMESPathError as ex:
             logger.error(
                 f"failed to search with jmespath\n"

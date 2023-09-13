@@ -14,7 +14,7 @@ Usage:
 
 """
 
-from ext.har2case.core import HarParser
+from zerorunner.ext.har2case.core import HarParser
 
 
 def init_har2case_parser(subparsers):

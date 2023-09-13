@@ -4,6 +4,7 @@ from autotest.exceptions.exceptions import ParameterError
 from autotest.models.api_models import ApiCase
 from autotest.schemas.api.api_case import ApiCaseQuery, ApiCaseIn, ApiCaseId, TestCaseRun, ApiCaseIdsQuery, \
     ApiTestCaseRun
+from autotest.schemas.api.api_report import TestReportSaveSchema
 from autotest.services.api.run_handle import ApiCaseHandle
 from autotest.services.api.run_handle_new import HandelTestCase
 from autotest.services.api.api_report import ReportService
@@ -42,6 +43,16 @@ class ApiCaseService:
                 raise ParameterError("套件名以存在!")
         data = await ApiCase.create_or_update(params.dict())
         return data
+
+    @staticmethod
+    async def update_case(params: ApiCaseIn) -> typing.Dict:
+        """用例保存"""
+        # 判断用例名是否重复
+        data = await ApiCase.create_or_update(params.dict())
+        return data
+
+
+
 
     @staticmethod
     async def deleted(params: ApiCaseId):
@@ -107,6 +118,7 @@ class ApiCaseService:
                  start_time=summary.start_time,
                  actual_run_count=summary.actual_run_count)
         )
+        report_info = ReportService.detail(summary.id)
         report_info.update(params_dict)
         summary_params = TestReportSaveSchema(**report_info)
 

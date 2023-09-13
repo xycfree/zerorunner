@@ -13,19 +13,19 @@
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="负责人">
+            <el-form-item label="负责人" prop="name">
               <el-input v-model="state.form.responsible_name" placeholder="负责人" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="测试人员">
+            <el-form-item label="测试人员" prop="name">
               <el-input v-model="state.form.test_user" placeholder="测试人员" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="开发人员">
+            <el-form-item label="开发人员" prop="name">
               <el-input v-model="state.form.dev_user" placeholder="开发人员" clearable></el-input>
             </el-form-item>
           </el-col>

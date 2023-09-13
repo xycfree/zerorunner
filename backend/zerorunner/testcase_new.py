@@ -107,9 +107,12 @@ class ZeroRunner(object):
         self.exception_stage = "添加用例到套件"
         testcase_list = self.add_tests(testcase)
         test_suite = self.add_suite(testcase_list)
+        logger.debug(f"test_suite: {test_suite}")
 
         self.exception_stage = "运行测试套件"
         results = self._run_suite(test_suite)
+        logger.debug(f"results: {results}")
+
 
         self.exception_stage = "汇总结果"
         self._summary = self._aggregate(results)

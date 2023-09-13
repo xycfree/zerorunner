@@ -5,7 +5,7 @@ import typing
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import Select, select, func, literal_column, Row
 from sqlalchemy.orm import noload, DeclarativeMeta
-
+from loguru import logger
 T = typing.TypeVar("T", Select, "Query[Any]")
 
 
