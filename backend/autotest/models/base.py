@@ -1,7 +1,9 @@
 import typing
 from math import ceil
+
+from loguru import logger
 from sqlalchemy import Column, Boolean, DateTime, func, select, update, delete, insert, Select, \
-    Executable, Result, String, ClauseList, BigInteger
+    Executable, Result, String, ClauseList, BigInteger, Integer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative
 
@@ -32,12 +34,12 @@ class Base:
     #     """将类名小写并转化为表名 __tablename__"""
     #     return cls.__name__.lower()
 
-    id = Column(BigInteger(), nullable=False, primary_key=True, autoincrement=True, comment='主键')
+    id = Column(BigInteger, nullable=False, primary_key=True, autoincrement=True, comment='主键')
     creation_date = Column(DateTime(), default=func.now(), comment='创建时间')
     created_by = Column(BigInteger, nullable=True, comment='创建人ID')
     updation_date = Column(DateTime(), default=func.now(), onupdate=func.now(), nullable=True, comment='更新时间')
     updated_by = Column(BigInteger, nullable=True, comment='更新人ID')
-    enabled_flag = Column(Boolean(), default=1, nullable=False, comment='是否删除, 0 删除 1 非删除')
+    enabled_flag = Column(Integer, default=1, nullable=False, comment='是否删除, 0 删除 1 非删除')
     trace_id = Column(String(255), nullable=True, comment="trace_id")
 
     @classmethod
@@ -81,6 +83,7 @@ class Base:
         else:
             stmt = insert(cls).values(**params)
         result = await cls.execute(stmt)
+        logger.debug(f"create_or_update执行语句:{params}, 执行结果:{result}")
         if result.is_insert:
             (primary_key,) = result.inserted_primary_key
             params["id"] = primary_key

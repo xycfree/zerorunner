@@ -178,12 +178,12 @@ class AsyncIOPool:
             return task_function
 
         # Once the our future has been awaited, it will either
-        # have raised an exception or returned a result. If it
-        # raised an exception, propagate it back to the caller
+        # have raised an exceptions or returned a result. If it
+        # raised an exceptions, propagate it back to the caller
         if error := result.exception():
             raise error
 
-        # If no exception was raised, pass `.result()` back through
+        # If no exceptions was raised, pass `.result()` back through
         # `AsyncIOPool.run` so that it can be checked to ensure it's
         # properly handled in case another callable or awaitable was
         # returned

@@ -123,7 +123,7 @@ CREATE TABLE `api_info`  (
   INDEX `id_index`(`id`) USING BTREE,
   INDEX `name_index`(`name`) USING BTREE,
   INDEX `enabled_flag_index`(`enabled_flag`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1699678698476806114 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of api_info
@@ -418,7 +418,7 @@ CREATE TABLE `celery_task_record`  (
   `kwargs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `args` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7703 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of celery_task_record
@@ -936,7 +936,7 @@ CREATE TABLE `notify`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `project_info`;
 CREATE TABLE `project_info`  (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '项目名称',
   `responsible_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '负责人',
   `test_user` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '测试人员',
@@ -957,7 +957,7 @@ CREATE TABLE `project_info`  (
   INDEX `id_index`(`id`) USING BTREE,
   INDEX `name_index`(`name`) USING BTREE,
   INDEX `enabled_flag_index`(`enabled_flag`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+)  ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of project_info
@@ -1391,7 +1391,7 @@ CREATE TABLE `user_login_record`  (
   INDEX `idx_login_record_ret_code`(`ret_code`) USING BTREE,
   INDEX `idx_login_record_token`(`token`) USING BTREE,
   INDEX `idx_login_record_code_logintime`(`code`, `login_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13127616 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_login_record

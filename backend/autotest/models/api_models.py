@@ -22,10 +22,10 @@ class ProjectInfo(Base):
     __tablename__ = 'project_info'
 
     name = Column(String(64), nullable=False, comment='项目名称', index=True)
-    responsible_name = Column(String(64), nullable=False, comment='负责人')
-    test_user = Column(String(100), nullable=False, comment='测试人员')
-    dev_user = Column(String(100), nullable=False, comment='开发人员')
-    publish_app = Column(String(100), nullable=False, comment='发布应用')
+    responsible_name = Column(String(64), nullable=True, comment='负责人')
+    test_user = Column(String(100), nullable=True, comment='测试人员')
+    dev_user = Column(String(100), nullable=True, comment='开发人员')
+    publish_app = Column(String(100), nullable=True, comment='发布应用')
     simple_desc = Column(String(100), nullable=True, comment='简要描述')
     remarks = Column(String(100), nullable=True, comment='其他信息')
     config_id = Column(Integer, nullable=True, comment='关联配置id')
@@ -366,12 +366,12 @@ class ApiCase(Base):
 
     name = Column(String(64), nullable=False, comment='名称', index=True)
     project_id = Column(BigInteger, nullable=False, comment='所属项目')
-    remarks = Column(String(255), nullable=False, comment='备注')
-    headers = Column(JSON, nullable=False, comment='场景请求头')
-    variables = Column(JSON, nullable=False, comment='场景变量')
-    step_data = Column(JSON, nullable=False, comment='场景步骤')
-    step_rely = Column(Integer, nullable=False, comment='步骤依赖  1依赖， 0 不依赖')
-    version = Column(Integer(), nullable=False, comment='版本', default=0)
+    remarks = Column(String(255), nullable=True, comment='备注')
+    headers = Column(JSON, nullable=True, comment='场景请求头')
+    variables = Column(JSON, nullable=True, comment='场景变量')
+    step_data = Column(JSON, nullable=True, comment='场景步骤')
+    step_rely = Column(Integer, nullable=True, comment='步骤依赖  1依赖， 0 不依赖')
+    version = Column(Integer(), nullable=True, comment='版本', default=0)
 
     # todo 目前步骤详情都冗余在单表，后面会拆为独立的表管理
 
@@ -473,17 +473,17 @@ class ApiCaseStep(Base):
     """用例步骤"""
     __tablename__ = 'api_case_step'
 
-    name = Column(String(64), nullable=False, comment='名称', index=True)
-    case_id = Column(BigInteger, nullable=False, comment='case_id')
-    step_type = Column(String(255), nullable=False, comment='步骤类型')
-    api_id = Column(BigInteger, nullable=False, comment='api_id')
-    step_id = Column(BigInteger, nullable=False, comment='步骤级id')
-    parent_id = Column(BigInteger, nullable=False, comment='父级步骤id')
-    step_data = Column(JSON, nullable=False, comment='步骤数据')
-    enable = Column(Integer, nullable=False, comment='是否生效')
-    index = Column(Integer, nullable=False, comment='顺序')
-    node_id = Column(String(255), nullable=False, comment='节点id')
-    version = Column(Integer, nullable=False, comment='版本', default=0)
+    name = Column(String(64), nullable=True, comment='名称', index=True)
+    case_id = Column(BigInteger, nullable=True, comment='case_id')
+    step_type = Column(String(255), nullable=True, comment='步骤类型')
+    api_id = Column(BigInteger, nullable=True, comment='api_id')
+    step_id = Column(BigInteger, nullable=True, comment='步骤级id')
+    parent_id = Column(BigInteger, nullable=True, comment='父级步骤id')
+    step_data = Column(JSON, nullable=True, comment='步骤数据')
+    enable = Column(Integer, nullable=True, comment='是否生效')
+    index = Column(Integer, nullable=True, comment='顺序')
+    node_id = Column(String(255), nullable=True, comment='节点id')
+    version = Column(Integer, nullable=True, comment='版本', default=0)
 
     @classmethod
     def get_list(cls, name=None, user_ids=None, project_id=None, created_by=None, suite_type=None,

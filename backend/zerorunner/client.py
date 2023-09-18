@@ -245,7 +245,7 @@ class HttpSession(requests.Session):
 
     def _send_request_safe_mode(self, method, url, **kwargs):
         """
-        Send a HTTP request, and catch any exception that might occur due to connection problems.
+        Send a HTTP request, and catch any exceptions that might occur due to connection problems.
         Safe mode has been removed from requests 1.x.
         """
         try:

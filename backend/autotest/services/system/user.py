@@ -31,7 +31,7 @@ class UserService:
             raise ValueError(CodeEnum.PARTNER_CODE_PARAMS_FAIL.msg)
         user_info = await User.get_user_by_name(username)
         if not user_info:
-            raise ValueError(CodeEnum.WRONG_USER_NAME_OR_PASSWORD.msg)
+            raise ValueError(CodeEnum.PARTNER_CODE_EMPLOYEE_FAIL.msg)
         u_password = decrypt_rsa_password(user_info["password"])
 
         if u_password != password:

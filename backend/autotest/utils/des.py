@@ -3,6 +3,7 @@ import base64
 from Cryptodome import Random
 from Cryptodome.Cipher import PKCS1_v1_5
 from Cryptodome.PublicKey import RSA
+from loguru import logger
 
 PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2YZVJzRrn1kyJHZS+7O5/oteO
@@ -59,8 +60,7 @@ def encrypt_rsa_password(password):
 
 
 def decrypt_rsa_password(password):
-    """
-    密码解密
+    """ 密码解密  解密失败后原文输出
     :param password:
     :return:
     """

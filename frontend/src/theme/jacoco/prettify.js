@@ -1401,7 +1401,7 @@ window['_pr_isIE6'] = function () {
 		var sourceCodeHtml = job.sourceCodeHtml;
 		var opt_langExtension = job.langExtension;
 
-		// Prepopulate output in case processing fails with an exception.
+		// Prepopulate output in case processing fails with an exceptions.
 		job.prettyPrintedHtml = sourceCodeHtml;
 
 		try {

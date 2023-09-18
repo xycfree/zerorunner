@@ -154,7 +154,7 @@ class ApiInfoService:
         :param params:
         :return:
         """
-        logger.info(f"debug_api params:{params}")
+        logger.debug(f"debug_api params:{params}")
         case_info = await HandelRunApiStep().init(params)
         runner = ZeroRunner()
         print(id(runner))
@@ -208,6 +208,8 @@ class ApiInfoService:
             raise ParameterError("用例不存在!")
 
         api_case = await ApiCase.get_case_by_project_id(params.project_id, name)
+        if not api_case:
+            return None
 
         for info in api_case:
             _temp = []

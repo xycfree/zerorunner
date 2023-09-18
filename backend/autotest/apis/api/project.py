@@ -11,8 +11,8 @@ router = APIRouter()
 
 @router.post('/list', description="项目列表")
 async def project_list(params: ProjectQuery):
-    logger.info(f"project list params: {params}")
-    logger.info(f"request: {await g.request.json()}")
+    logger.debug(f"project list params: {params}")
+    logger.debug(f"request: {await g.request.json()}")
     data = await ProjectService.list(params)
     return partner_success(data)
 

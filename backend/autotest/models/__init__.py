@@ -4,6 +4,11 @@
 from autotest.db.session import engine
 from autotest.models.base import Base
 from autotest.models import ui_models
+from autotest.models import api_models
+from autotest.models import celery_beat_models
+from autotest.models import coverage_models
+from autotest.models import system_models
+from autotest.models import tools_models
 
 
 async def init_db():

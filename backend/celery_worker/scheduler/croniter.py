@@ -55,7 +55,7 @@ def _get_caller_globals_and_locals():
 
 
 class CroniterError(ValueError):
-    """ General top-level Croniter base exception """
+    """ General top-level Croniter base exceptions """
     pass
 
 
@@ -71,7 +71,7 @@ class CroniterBadCronError(CroniterError):
 class CroniterUnsupportedSyntaxError(CroniterBadCronError):
     """ Valid cron syntax, but likely to produce inaccurate results """
     # Extending CroniterBadCronError, which may be contridatory, but this allows
-    # catching both errors with a single exception.  From a user perspective
+    # catching both errors with a single exceptions.  From a user perspective
     # these will likely be handled the same way.
     pass
 
@@ -244,7 +244,7 @@ class croniter(object):
             raise TypeError("Invalid ret_type, only 'float' or 'datetime' "
                             "is acceptable.")
 
-        # exception to support day of month and day of week as defined in cron
+        # exceptions to support day of month and day of week as defined in cron
         if (expanded[2][0] != '*' and expanded[4][0] != '*') and self._day_or:
             bak = expanded[4]
             expanded[4] = ['*']
@@ -605,7 +605,7 @@ class croniter(object):
     @classmethod
     def _expand(cls, expr_format, hash_id=None):
         # Split the expression in components, and normalize L -> l, MON -> mon,
-        # etc. Keep expr_format untouched so we can use it in the exception
+        # etc. Keep expr_format untouched so we can use it in the exceptions
         # messages.
         expr_aliases = {
             '@midnight': ('0 0 * * *', 'h h(0-2) * * * h'),
@@ -879,7 +879,7 @@ def croniter_range(start, stop, expr_format, ret_type=None, day_or=True, exclude
                 yield dt
             dt = step()
     except CroniterBadDateError:
-        # Stop iteration when this exception is raised; no match found within the given year range
+        # Stop iteration when this exceptions is raised; no match found within the given year range
         return
 
 

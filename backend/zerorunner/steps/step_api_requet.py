@@ -207,7 +207,7 @@ def run_api_request(runner: SessionRunner,
         extract_mapping = resp_obj.extract(extractors, step.variables, runner.config.functions)
         step_result.export_vars = extract_mapping
         merge_variable.update(extract_mapping)
-
+        # logger.debug(f"merge_variable: {merge_variable}")
         # teardown code
         if step.teardown_code:
             step_result.set_step_log(f"后置code开始  ~~~")

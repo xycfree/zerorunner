@@ -77,7 +77,7 @@ class ReportService:
     @staticmethod
     async def save_report_detail(summary: TestCaseSummary, report_id: typing.Union[int, str], **kwargs: typing.Any):
         """
-        报春报告详情
+        保存报告详情
         :param summary: 报告结果
         :param report_id: 报告id
         :param kwargs: kwargs

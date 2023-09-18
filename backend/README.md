@@ -56,6 +56,13 @@ job -A celery_worker.worker.job beat -S celery_worker.scheduler.schedulers:Datab
 # 定时任务心跳启动
 job -A celery_worker.worker.job beat  -l INFO 
 
+
+# alembic迁移命令
+alembic init alembic  # 初始化
+alembic revision --autogenerate -m "init"  # 提交修改
+alembic upgrade head  # 更新
+alembic downgrade head  # 降级
+
 ```
 
 #### 💌 支持作者
