@@ -12,6 +12,7 @@
 
               <el-tree-select
                   ref="menuTreeRef"
+                  filterable
                   v-model="state.form.parent_id"
                   :data="menuTree"
                   :props="{label: 'title', value: 'id'}"
@@ -142,7 +143,7 @@
   </div>
 </template>
 
-<script lang="ts" setup name="SaveOrUpdateMenu">
+<script setup name="SaveOrUpdateMenu">
 import {computed, onMounted, reactive, ref} from 'vue';
 import IconSelector from '/@/components/iconSelector/index.vue';
 import {useMenuApi} from "/@/api/useSystemApi/menu";
@@ -207,7 +208,7 @@ const state = reactive({
 // 创建表单
 
 // 打开弹窗
-const openDialog = (editType: string, row: any) => {
+const openDialog = (editType, row) => {
   state.editType = editType
   if (row) {
     state.form = JSON.parse(JSON.stringify(row));

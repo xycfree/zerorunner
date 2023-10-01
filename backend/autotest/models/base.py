@@ -2,12 +2,11 @@ import typing
 from math import ceil
 
 from loguru import logger
-from sqlalchemy import Column, Boolean, DateTime, func, select, update, delete, insert, Select, \
-    Executable, Result, String, ClauseList, BigInteger, Integer
+from sqlalchemy import Boolean, DateTime, func, select, update, delete, insert, Select, \
+    Executable, Result, String, ClauseList, BigInteger
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative
-from sqlalchemy.orm import declared_attr
-
+from sqlalchemy.orm import mapped_column, declared_attr
 from autotest.db.session import provide_session
 from autotest.exceptions.exceptions import AccessTokenFail
 from autotest.utils.consts import DEFAULT_PAGE, DEFAULT_PER_PAGE
@@ -30,16 +29,6 @@ class Base:
 
     __mapper_args__ = {"eager_defaults": True}  # 防止 insert 插入后不刷新
 
-    id = Column(BigInteger, nullable=False, primary_key=True, autoincrement=True, comment='主键')
-    creation_date = Column(DateTime(), default=func.now(), comment='创建时间')
-    created_by = Column(BigInteger, nullable=True, comment='创建人ID')
-    updation_date = Column(DateTime(), default=func.now(), onupdate=func.now(), nullable=True, comment='更新时间')
-    updated_by = Column(BigInteger, nullable=True, comment='更新人ID')
-    enabled_flag = Column(Integer, default=1, nullable=False, comment='是否删除, 0 删除 1 非删除')
-    trace_id = Column(String(255), nullable=True, comment="trace_id")
-
-
-
     # @declared_attr
     # def __tablename__(cls) -> str:
     #     """将类名小写并转化为表名 __tablename__"""
@@ -52,6 +41,15 @@ class Base:
         name_list = re.findall(r"[A-Z][a-z\d]*", cls.__name__)
         # 表名格式替换成 下划线_格式 如 MallUser 替换成 mall_user
         return "_".join(name_list).lower()
+
+
+    id = mapped_column(BigInteger(), nullable=False, primary_key=True, autoincrement=True, comment='主键')
+    creation_date = mapped_column(DateTime(), default=func.now(), comment='创建时间')
+    created_by = mapped_column(BigInteger, comment='创建人ID')
+    updation_date = mapped_column(DateTime(), default=func.now(), onupdate=func.now(), comment='更新时间')
+    updated_by = mapped_column(BigInteger, comment='更新人ID')
+    enabled_flag = mapped_column(Boolean(), default=1, nullable=False, comment='是否删除, 0 删除 1 非删除')
+    trace_id = mapped_column(String(255), comment="trace_id")
 
     @classmethod
     async def get(cls, id: typing.Union[int, str], to_dict=False) -> typing.Union["Base", typing.Dict, None]:

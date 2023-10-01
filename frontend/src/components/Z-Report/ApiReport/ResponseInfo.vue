@@ -34,7 +34,7 @@
             ref="monacoEditRef"
             :options="{readOnly: true}"
             v-model:value="state.body"
-            long="json"
+            lang="json"
         ></z-monaco-editor>
         <el-image
             v-else-if="state.content_type.includes('image')"
@@ -76,13 +76,12 @@
   </div>
 </template>
 
-<script lang="ts" setup name="ResponseInfo">
-import {nextTick, onMounted, PropType, reactive, watch} from 'vue';
-import JsonViews from "/@/components/Z-JsonViews/index.vue";
+<script setup name="ResponseInfo">
+import {nextTick, onMounted, reactive, watch} from 'vue';
 import {formatSizeUnits} from "/@/utils/case"
 
 const props = defineProps({
-  data: Object as PropType<ResponseData>,
+  data: Object,
   stat: Object,
 })
 
