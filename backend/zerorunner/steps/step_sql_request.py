@@ -143,7 +143,7 @@ class RunSqlRequest(object):
 
 
 class RunSqlStep(IStep):
-    def __init__(self, step: TStep):
+    def __init__(self, step: TStep):  # 步骤模型
         self.__step = step
 
     def name(self) -> str:

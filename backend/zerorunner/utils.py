@@ -10,8 +10,11 @@ import json
 import os
 import os.path
 import platform
+import re
 from multiprocessing import Queue
 import typing
+
+import emoji
 
 from zerorunner import exceptions, __version__
 from loguru import logger
@@ -253,3 +256,53 @@ def gen_cartesian_product(*args: typing.List[typing.Dict]) -> typing.List[typing
         product_list.append(product_item_dict)
 
     return product_list
+
+
+def filter_emoji(desstr, restr=''):
+    """ 过滤表情
+    :param desstr:
+    :param restr:
+    :return:
+    """
+    try:
+        co = re.compile(u'[\U00010000-\U0010ffff]')
+    except re.error:
+        co = re.compile(u'[\uD800-\uDBFF][\uDC00-\uDFFF]')
+    return co.sub(restr, desstr)
+
+
+def emoji_emojize(txt: str):
+    """  emoji编码 转换为emoji表情
+    :param txt:
+    :return:
+    >>> print(emoji.emojize('Python is :thumbs_up:'))  # 编码
+    >>> Python is 👍
+    """
+    try:
+        return emoji.emojize(txt)
+    except Exception as e:
+        logger.error(f"emoji表情编码异常:{e}")
+        return filter_emoji(txt)
+
+
+
+def emoji_demojize(txt: str):
+    """ emoji解码 表情转换为字符
+    :param txt:
+    :return:
+    >>> print(emoji.demojize('Python is 👍'))  # 解码
+    >>> Python is :thumbs_up:
+    """
+    try:
+        return emoji.demojize(txt)
+    except Exception as e:
+        logger.error(f"emoji表情编码异常:{e}")
+        return filter_emoji(txt)
+
+
+
+
+
+if __name__ == '__main__':
+    content = '👍, very good!'
+    print(filter_emoji(content))

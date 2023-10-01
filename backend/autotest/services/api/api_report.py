@@ -1,6 +1,8 @@
 import time
 import typing
 
+from loguru import logger
+
 from autotest.models.api_models import ApiTestReport, ApiTestReportDetail
 from autotest.schemas.api.api_report import TestReportQuery, TestReportId, TestReportDetailQuery, TestReportSaveSchema
 from zerorunner.model.result_model import TestCaseSummary, StepResult
@@ -42,7 +44,7 @@ class ReportService:
         report_info = TestReportSaveSchema(
             name=summary.name,
             start_time=summary.start_time,
-            duration=summary.duration,
+            duration=round(summary.duration, 3),
             case_id=summary.case_id,
             run_mode=run_mode,
             run_type=run_type,
@@ -144,7 +146,9 @@ class ReportService:
         :return:
         """
         report_detail = ApiTestReportDetail.model(params.id)
+        logger.debug(f"获取报告表:{report_detail.__name__}")
         data = await report_detail.get_list(params)
+        # logger.debug(f"获取报告详情:{data}")
         return data
 
     @staticmethod
@@ -165,7 +169,7 @@ class ReportService:
         report_info = TestReportSaveSchema(
             name=summary.name,
             start_time=summary.start_time,
-            duration=summary.duration,
+            duration=round(summary.duration, 3),
             case_id=summary.case_id,
             run_mode="case",
             run_type=10,

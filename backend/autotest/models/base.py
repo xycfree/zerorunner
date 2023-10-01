@@ -6,6 +6,7 @@ from sqlalchemy import Column, Boolean, DateTime, func, select, update, delete, 
     Executable, Result, String, ClauseList, BigInteger, Integer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy.orm import declared_attr
 
 from autotest.db.session import provide_session
 from autotest.exceptions.exceptions import AccessTokenFail
@@ -29,11 +30,6 @@ class Base:
 
     __mapper_args__ = {"eager_defaults": True}  # 防止 insert 插入后不刷新
 
-    # @declared_attr
-    # def __tablename__(cls) -> str:
-    #     """将类名小写并转化为表名 __tablename__"""
-    #     return cls.__name__.lower()
-
     id = Column(BigInteger, nullable=False, primary_key=True, autoincrement=True, comment='主键')
     creation_date = Column(DateTime(), default=func.now(), comment='创建时间')
     created_by = Column(BigInteger, nullable=True, comment='创建人ID')
@@ -41,6 +37,21 @@ class Base:
     updated_by = Column(BigInteger, nullable=True, comment='更新人ID')
     enabled_flag = Column(Integer, default=1, nullable=False, comment='是否删除, 0 删除 1 非删除')
     trace_id = Column(String(255), nullable=True, comment="trace_id")
+
+
+
+    # @declared_attr
+    # def __tablename__(cls) -> str:
+    #     """将类名小写并转化为表名 __tablename__"""
+    #     return cls.__name__.lower()
+
+    @declared_attr
+    def __tablename__(cls) -> str:
+        import re
+        # 如果没有指定__tablename__  则默认使用model类名转换表名字
+        name_list = re.findall(r"[A-Z][a-z\d]*", cls.__name__)
+        # 表名格式替换成 下划线_格式 如 MallUser 替换成 mall_user
+        return "_".join(name_list).lower()
 
     @classmethod
     async def get(cls, id: typing.Union[int, str], to_dict=False) -> typing.Union["Base", typing.Dict, None]:

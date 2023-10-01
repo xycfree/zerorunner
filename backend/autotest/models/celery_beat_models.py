@@ -160,7 +160,7 @@ class CeleryTaskRecord(Base):
     task_name = Column(String(255), nullable=False, comment='任务名称')
     task_type = Column(String(255), nullable=False, comment='任务类型 10普通任务 20定时任务')
     status = Column(String(255), nullable=False, comment='任务状态')
-    result = Column(String(255), nullable=False, comment='任务结果')
+    result = Column(Text, nullable=False, comment='任务结果')
     start_time = Column(DateTime, nullable=False, comment='开始时间')
     end_time = Column(DateTime, nullable=False, comment='结束时间')
     duration = Column(String(255), nullable=False, comment='耗时')

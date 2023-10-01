@@ -58,8 +58,6 @@ class ApiCaseService:
         data = await ApiCase.create_or_update(params.dict())
         return data
 
-
-
     async def get_step_data_tree(step_list: typing.List[typing.Dict], parent_id: int = None) -> typing.List[
         TCaseStepData]:
         step_tree = []
@@ -148,10 +146,10 @@ class ApiCaseService:
     @staticmethod
     async def debug_case(params: TestCaseRun):
         """调试用例"""
-        case_info = await HandelTestCase().init(params)
+        case_info = await HandelTestCase().init(params)  # 初始化获取用例信息
         runner = ZeroRunner()
         # case_info.make_functions()
-        testcase = case_info.get_testcases()
+        testcase = case_info.get_testcases()  # 获取执行环境、项目配置、测试用例数据信息
         summary = await sync_to_async(runner.run_tests, testcase)
         # summary = runner.get_summary()
         project_id = case_info.api_case.project_id
@@ -169,7 +167,7 @@ class ApiCaseService:
                  run_skip_count=summary.run_skip_count,
                  run_fail_count=summary.run_fail_count,
                  run_err_count=summary.run_err_count,
-                 duration=summary.duration,
+                 duration=round(summary.duration, 3),
                  start_time=summary.start_time,
                  actual_run_count=summary.actual_run_count)
         )

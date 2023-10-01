@@ -45,7 +45,7 @@ class UiReportService:
         report_info = UiReportSaveSchema(
             name=summary.name,
             start_time=summary.start_time,
-            duration=summary.duration,
+            duration=round(summary.duration, 3),
             case_id=summary.case_id,
             run_type=run_type,
             success=summary.success,
@@ -167,7 +167,7 @@ class UiReportService:
         ui_report_info = UiReportSaveSchema(
             name=summary.name,
             start_time=summary.start_time,
-            duration=summary.duration,
+            duration=round(summary.duration, 3),
             case_id=summary.case_id,
             run_type=10,
             success=summary.success,

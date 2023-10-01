@@ -46,6 +46,7 @@ async def async_run_testcase(case_id: typing.Union[str, int], report_id: [str, i
     :param kwargs: 其他参数
     :return:
     """
+    logger.info(f"异步测试用例[async_run_testcase]开始...")
     exec_user_id = kwargs.get("exec_user_id", None)
     exec_user_name = kwargs.get("exec_user_name", None)
     r: MyRedis = g.redis
@@ -58,9 +59,10 @@ async def async_run_testcase(case_id: typing.Union[str, int], report_id: [str, i
     await ApiCaseService.set_step_data(case_info)
     run_params = TestCaseRun(**case_info, env_id=kwargs.get('case_env_id', None))
     api_case_info = await HandelTestCase().init(run_params)
-
+    logger.debug(f"api_case_info:{api_case_info}")
     if not report_id:
         """没有报告id创建报告"""
+        logger.debug(f"report_id为空，创建测试报告...")
         report_params = TestReportSaveSchema(
             name=api_case_info.api_case.name,
             case_id=api_case_info.config.case_id,
@@ -77,22 +79,24 @@ async def async_run_testcase(case_id: typing.Union[str, int], report_id: [str, i
         report_id = report_info.get("id")
         report_params = TestReportSaveSchema(**report_info)
     else:
-
+        logger.debug(f"获取测试报告,report_Id:{report_id}")
         report_info = await ApiTestReport.get(report_id, to_dict=True)
         report_params = TestReportSaveSchema(**report_info)
 
     if run_params.step_rely:  # 步骤依赖:
+        logger.debug(f"测试用例存在步骤依赖")
         runner = ZeroRunner()
         # await api_case_info.init_config()
         testcase = api_case_info.get_testcases()
-        summary = runner.run_tests(testcase)
+        logger.debug(f"开始执行测试用例...")
+        summary = runner.run_tests(testcase)  # 执行测试
         logger.info(f"执行成功！--- report_id: {report_id}")
         report_params.run_count = summary.run_count
         report_params.run_success_count = summary.run_success_count
         report_params.run_skip_count = summary.run_skip_count
         report_params.run_fail_count = summary.run_fail_count
         report_params.run_err_count = summary.run_err_count
-        report_params.duration = summary.duration
+        report_params.duration = round(summary.duration, 3)
         report_params.start_time = summary.start_time
         report_params.actual_run_count = summary.actual_run_count
         summary_params = TestReportSaveSchema(**report_params.dict())
@@ -100,19 +104,20 @@ async def async_run_testcase(case_id: typing.Union[str, int], report_id: [str, i
         await ReportService.save_report_info(summary_params)
         await ReportService.save_report_detail(summary, report_id)
     else:
+        logger.debug(f"异步执行任务-无依赖步骤开始...")
         testcase = api_case_info.get_testcases()
         # 用例列表
         testcase_list_key = TEST_EXECUTE_SET.format(report_id)
         # 运行统计
         testcase_static_key = TEST_EXECUTE_STATS.format(report_id)
         testcase_task_key = TEST_EXECUTE_TASK.format(report_id)
-
+        logger.debug(f'用例步骤写入redis...')
         for step in testcase.teststeps:
             new_testcase = TestCase(config=testcase.config, teststeps=[step])
-            await r.cus_lpush(testcase_list_key, new_testcase.dict(by_alias=True))
+            await r.cus_lpush(testcase_list_key, new_testcase.dict(by_alias=True))  # 用例步骤写入redis
         # 设置默认统计数据
         await r.set(testcase_static_key, report_params, CACHE_WEEK)
-        # 设置运行任务
+        # 设置运行任务  'zero:test_execute_set:task:{}'
         await r.set(testcase_task_key, config.task_run_pool)
         # 设置ttl 7天
         await r.expire(testcase_list_key, CACHE_WEEK)
@@ -145,7 +150,7 @@ async def run_case_step(report_id: typing.Union[str, int]):
                 static_dict["run_fail_count"] = static_dict["run_fail_count"] + summary.run_fail_count
                 static_dict["run_err_count"] = static_dict["run_err_count"] + summary.run_err_count
                 static_dict["actual_run_count"] = static_dict["actual_run_count"] + summary.actual_run_count
-                static_dict["duration"] = static_dict["duration"] + summary.duration
+                static_dict["duration"] = round(static_dict["duration"] + summary.duration, 3)
                 await r.set(testcase_static_key, static_dict)
                 r_lock.release()
 

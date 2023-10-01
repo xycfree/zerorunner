@@ -139,7 +139,7 @@ class TStep(TStepBase):
     extracts: typing.List[ExtractData] = Field([], description="提取")
     # used to export session variables from referenced testcase
     export: Export = Field([], description="导出")
-    validators: typing.List[ValidatorData] = Field([], alias="validate")
+    validators: typing.List[ValidatorData] = Field([], alias="validate", description='验证模型')
     request: TRequest = Field(None, description="api请求")
     sql_request: TSqlRequest = Field(None, description="sql请求")
     if_request: TIFRequest = Field(None, description="if请求")

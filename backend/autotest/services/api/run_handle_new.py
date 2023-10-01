@@ -82,7 +82,7 @@ class HandleConfig(object):
                    headers: typing.List[ApiBaseSchema] = None,
                    variables: typing.List[ApiBaseSchema] = None) -> "HandleConfig":
         self.config = TConfig(name="", case_id=case_id)
-        await self.init_env(env_id)
+        await self.init_env(env_id)  # 环境变量更新为env的
         await self.init_functions()
         if headers:
             await self.init_headers(headers)
@@ -331,23 +331,30 @@ class HandelTestCase(object):
     api_case: typing.Union[TestCaseRun, None]
 
     async def init(self, params: TestCaseRun) -> "HandelTestCase":
+        """ 初始化配置、用例数据
+        :param params:
+        :return:
+        """
         self.config = None
         self.teststeps = []
         self.api_case = params
         await self.init_config()
         await self.__init_headers()
         await self.__init_variables()
-        await self.init_steps(params.step_data)
+        await self.init_steps(params.step_data)  # 初始化测试用例
         return self
 
     async def init_config(self):
+        """ 初始化配置模型、用例面那个车、步骤依赖
+        :return
+        """
         config_info = await HandleConfig().init(self.api_case.env_id,
                                                 self.api_case.id,
                                                 self.api_case.headers,
                                                 self.api_case.variables)
-        self.config = config_info.config
-        self.config.name = self.api_case.name
-        self.config.step_rely = self.api_case.step_rely
+        self.config = config_info.config  # 模型配置
+        self.config.name = self.api_case.name  # 用例名称
+        self.config.step_rely = self.api_case.step_rely  # 步骤依赖
 
     async def init_steps(self, steps: typing.List[TCaseStepData]) -> "HandelTestCase":
         step_data = await self.handle_steps(steps)
@@ -392,6 +399,9 @@ class HandelTestCase(object):
             self.config.variables = parse_validators_string_value(new_validators)
 
     async def __init_headers(self):
+        """ headers更新，如果前端请求用例时存在headers存在会更新环境配置的headers
+        :return:
+        """
         if self.api_case.headers:
             self.config.headers.update(handle_headers_or_validators(self.api_case.headers))
 

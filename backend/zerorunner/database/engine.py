@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker, DeclarativeMeta
 class DBEngine(object):
     def __init__(self, db_uri: str):
         """
-        db_uri = f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}?charset=utf8mb4'
+        db_uri = f'mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}?charset=utf8mb4'
 
         """
         engine = create_engine(db_uri)
