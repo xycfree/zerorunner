@@ -7,7 +7,10 @@ from autotest.services.api.api_case import ApiCaseService
 from autotest.utils.serialize import default_serialize
 from autotest.exceptions.exceptions import ParameterError
 from autotest.models.api_models import ApiInfo, ApiCase
+<<<<<<< HEAD
 from autotest.schemas.api.api_case import ApiCaseIn
+=======
+>>>>>>> xyc/master
 from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema
 from autotest.services.api.api_report import ReportService
 from autotest.services.api.run_handle_new import HandelRunApiStep
@@ -54,8 +57,8 @@ class ApiInfoService:
             if api_info.name != params.name:
                 if existing_data:
                     raise ParameterError("用例名重复!")
-        await ApiInfo.create_or_update(params.dict())
-        return await ApiInfo.get(params.id)
+        data = await ApiInfo.create_or_update(params.dict())
+        return await ApiInfo.get_api_by_id(data.get('id', None))
 
     @staticmethod
     async def set_api_status(**kwargs: typing.Any):
@@ -195,6 +198,7 @@ class ApiInfoService:
             return count_info.get("count", 0)
 
     @staticmethod
+<<<<<<< HEAD
     async def update_case_info(params: ApiInfoIn, name: str):
         """
         更新保存测试用例/配置
@@ -232,3 +236,39 @@ class ApiInfoService:
                 _info['step_data'] = _temp
                 await ApiCaseService.update_case(ApiCaseIn.parse_obj(_info))
 
+=======
+    async def use_api_relation(params: ApiId):
+        """
+        api使用关系
+        :param params:
+        :return:
+        """
+        api_info = await ApiInfo.get_api_by_id(params.id)
+        if not api_info:
+            raise ValueError('不存在当前接口！')
+        # api关联到的测试用例
+        api_case_relation_data = await ApiCase.get_relation_by_api_id(params.id) or []
+        node_list = [dict(id=f"api_{params.id}", data=dict(id=params.id, type="api", name=api_info.get("name"),
+                                                             created_by_name=api_info.get("created_by_name"),
+                                                             creation_date=api_info.get("creation_date")))]
+        line_list = []
+        for relation_data in api_case_relation_data:
+            node_data = dict(id=relation_data.get("relation_id"),
+                             data=dict(id=relation_data.get("case_id"),
+                                       type="case",
+                                       created_by_name=relation_data.get("created_by_name"),
+                                       creation_date=relation_data.get("creation_date"),
+                                       name=relation_data.get("case_name")))
+            node_list.append(node_data)
+            line_list.append({
+                "from": f"api_{params.id}",
+                "to": relation_data.get("relation_id"),
+                "text": "关联用例"
+            })
+        data = {
+            "rootId": f"api_{params.id}",
+            "nodes": node_list,
+            "lines": line_list,
+        }
+        return data
+>>>>>>> xyc/master
