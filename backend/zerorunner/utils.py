@@ -10,25 +10,17 @@ import json
 import os
 import os.path
 import platform
-<<<<<<< HEAD
 import re
-from multiprocessing import Queue
-=======
->>>>>>> xyc/master
 import typing
 from datetime import datetime
 from multiprocessing import Queue
 
-<<<<<<< HEAD
 import emoji
-
-from zerorunner import exceptions, __version__
-=======
 from fastapi.encoders import jsonable_encoder
->>>>>>> xyc/master
 from loguru import logger
 from sqlalchemy import Row
 from sqlalchemy.orm import DeclarativeMeta
+
 from zerorunner import exceptions, __version__
 from zerorunner.models import VariablesMapping
 
@@ -270,7 +262,6 @@ def gen_cartesian_product(*args: typing.List[typing.Dict]) -> typing.List[typing
     return product_list
 
 
-<<<<<<< HEAD
 def filter_emoji(desstr, restr=''):
     """ 过滤表情
     :param desstr:
@@ -289,7 +280,7 @@ def emoji_emojize(txt: str):
     :param txt:
     :return:
     >>> print(emoji.emojize('Python is :thumbs_up:'))  # 编码
-    >>> Python is 👍
+    >>> "Python is 👍"
     """
     try:
         return emoji.emojize(txt)
@@ -304,7 +295,7 @@ def emoji_demojize(txt: str):
     :param txt:
     :return:
     >>> print(emoji.demojize('Python is 👍'))  # 解码
-    >>> Python is :thumbs_up:
+    >>> "Python is :thumbs_up:"
     """
     try:
         return emoji.demojize(txt)
@@ -313,13 +304,6 @@ def emoji_demojize(txt: str):
         return filter_emoji(txt)
 
 
-
-
-
-if __name__ == '__main__':
-    content = '👍, very good!'
-    print(filter_emoji(content))
-=======
 def default_serialize(obj):
     """默认序序列化"""
     try:
@@ -339,4 +323,3 @@ def default_serialize(obj):
         return jsonable_encoder(obj)
     except TypeError as err:
         return repr(obj)
->>>>>>> xyc/master

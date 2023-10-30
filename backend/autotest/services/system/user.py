@@ -108,16 +108,9 @@ class UserService:
         :param params: 用户字段
         :return:
         """
-<<<<<<< HEAD
-        if not params.id:
-            if await User.get_user_by_name(params.username):
-            # if User.get_user_by_name(params.username):
-                raise ValueError('用户昵称已存在！')
-=======
         exist_user = await User.get_user_by_nickname(params.nickname)
         if not params.id and exist_user:
             raise ValueError('用户昵称已存在！')
->>>>>>> xyc/master
         else:
             user_info = await User.get(params.id, to_dict=True)
             if user_info['nickname'] != params.nickname and await exist_user:

@@ -6,7 +6,7 @@ import typing
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
-from autotest.db.redis import MyRedis
+from autotest.db.my_redis import MyRedis
 from autotest.db.session import async_session
 
 

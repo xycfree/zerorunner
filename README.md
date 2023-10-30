@@ -106,6 +106,15 @@ yarn dev
 yarn build
 ```
 
+#### merge主分支
+```
+1.undefined.查看远程仓库： git remote -v 
+2.添加远项目地址：git remote add xyc git@github.com:baizunxian/zerorunner.git
+3.检出远程分支更新: git fetch xyc  
+4.merge远程分支到本地: git merge xyc/master
+undefined.文件推送：git  push
+```
+
 #### 💯 学习交流加 微信 群
 
 - 或者添加我的微信，我可以拉你们进入交流群

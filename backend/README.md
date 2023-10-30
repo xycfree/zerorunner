@@ -46,6 +46,13 @@ elery -A celery_worker.worker.job worker --pool=solo -l INFO
 
 celery -A celery_worker.worker  worker --pool=solo -l INFO 
 
+"""
+1.查看远程仓库： git remote -v 
+2.添加远项目地址：git remote add xyc git@github.com:baizunxian/zerorunner.git
+3.检出远程分支更新: git fetch xyc  
+4.merge远程分支到本地: git merge xyc/master
+undefined.文件推送：git  push
+"""
 
 # linux 启动
 celery -A celery_worker.worker.job worker --loglevel=INFO -c 10 -P solo -n zerorunner-job-worker

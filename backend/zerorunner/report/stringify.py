@@ -7,7 +7,11 @@ try:
 except ImportError:
     from collections.abc import Iterable
 from json import JSONDecodeError
-from jinja2 import escape
+try:
+    from jinja2 import escape  # jinja2 < 3.1.0
+except:
+    from markupsafe import escape  # jinja2>=3.1.x
+
 from requests.cookies import RequestsCookieJar
 
 from zerorunner.models import TestCaseSummary, StepResult, RequestData, ResponseData

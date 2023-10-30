@@ -7,10 +7,7 @@ from autotest.services.api.api_case import ApiCaseService
 from autotest.utils.serialize import default_serialize
 from autotest.exceptions.exceptions import ParameterError
 from autotest.models.api_models import ApiInfo, ApiCase
-<<<<<<< HEAD
-from autotest.schemas.api.api_case import ApiCaseIn
-=======
->>>>>>> xyc/master
+from autotest.schemas.api.api_case import ApiCaseIn  # wally import
 from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema
 from autotest.services.api.api_report import ReportService
 from autotest.services.api.run_handle_new import HandelRunApiStep
@@ -198,7 +195,6 @@ class ApiInfoService:
             return count_info.get("count", 0)
 
     @staticmethod
-<<<<<<< HEAD
     async def update_case_info(params: ApiInfoIn, name: str):
         """
         更新保存测试用例/配置
@@ -236,7 +232,6 @@ class ApiInfoService:
                 _info['step_data'] = _temp
                 await ApiCaseService.update_case(ApiCaseIn.parse_obj(_info))
 
-=======
     async def use_api_relation(params: ApiId):
         """
         api使用关系
@@ -271,4 +266,3 @@ class ApiInfoService:
             "lines": line_list,
         }
         return data
->>>>>>> xyc/master
