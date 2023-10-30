@@ -6,7 +6,7 @@ import typing
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
-from autotest.db.my_redis import MyRedis
+from autotest.db.my_redis import MyAsyncRedis
 from autotest.db.session import async_session
 
 
@@ -23,6 +23,6 @@ async def get_db() -> typing.AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 
-async def get_redis(request: Request) -> MyRedis:
+async def get_redis(request: Request) -> MyAsyncRedis:
     """ redis连接对象 """
     return await request.app.state.redis

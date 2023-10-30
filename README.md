@@ -99,11 +99,20 @@ cd zerorunner/frontend
 # 或者
 yarn install
 
+# 修改配置
+.env.development # 开发环境
+.env.production # 生产环境
+
+VITE_API_BASE_URL # 后端接口地址
+VITE_API_PREFIX # 后端接口前缀
+VITE_WBE_SOCKET_URL # websocket 地址
+
 # 运行项目
 yarn dev
 
 # 打包发布
 yarn build
+
 ```
 
 #### merge主分支

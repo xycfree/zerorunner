@@ -7,9 +7,9 @@ from autotest.models.api_models import ApiInfo
 from autotest.utils.local import g
 from autotest.utils.response.codes import CodeEnum
 from autotest.utils.response.http_response import partner_success
-from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema
+from autotest.schemas.api.api_info import ApiQuery, ApiId, ApiInfoIn, ApiRunSchema, ApiIds
 from autotest.services.api.api_info import ApiInfoService
-from autotest.utils import current_user
+from autotest.utils.current_user import current_user
 
 router = APIRouter()
 
@@ -27,6 +27,16 @@ async def get_case_info(params: ApiId):
     :return:
     """
     case_info = await ApiInfoService.detail(params)
+    return partner_success(case_info)
+
+
+@router.post('/getApiInfos', description="获接口信息详情多个")
+async def get_case_infos(params: ApiIds):
+    """
+    获取用例信息
+    :return:
+    """
+    case_info = await ApiInfoService.get_detail_by_ids(params)
     return partner_success(case_info)
 
 
@@ -48,6 +58,12 @@ async def save_or_update(params: ApiInfoIn):
         await ApiInfoService.update_case_info(params, name=old_api_info.get("name"))
 
     return partner_success(case_info)
+
+
+@router.post('/copyApi', description="复制接口")
+async def copy_api(params: ApiId):
+    await ApiInfoService.copy_api(params)
+    return partner_success()
 
 
 @router.post('/setApiStatus', description="接口失效生效")
@@ -102,6 +118,7 @@ def postman2case():
     json_body = json.load(postman_file)
     data = ApiInfoService.postman2api(json_body, **g.request.form)
     return partner_success(data)
+
 
 @router.post('/getUseApiRelation', description="api使用关系")
 async def use_api_relation(params: ApiId):

@@ -14,7 +14,6 @@ FunctionsMapping = typing.Dict[str, typing.Callable]
 Headers = typing.Dict[str, str]
 Cookies = typing.Dict[str, str]
 Verify = bool
-# Hooks = typing.List[Union[Text, Dict[Text, Text]]]
 Hooks = typing.List[typing.Any]
 Export = typing.List[str]
 Validators = typing.List[typing.Dict]
@@ -38,7 +37,7 @@ class TStepTypeEnum(str, Enum):
     api = "api"
     case = "case"
     wait = "wait"
-    script = "db_script"
+    script = "script"
     sql = "sql"
     extract = "extract"
     loop = "loop"

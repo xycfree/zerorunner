@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card style="margin-bottom: 10px">
       <div class="report-seal"
-           v-show="state.statisticsData"
+           v-show="JSON.stringify(state.statisticsData) !== '{}'"
            :style="{border: `solid 4px var(${reportStatus? '--el-color-success': '--el-color-danger'})`}">
         <div class="report-seal-son"
              :style="{border: `solid 2px var(${reportStatus? '--el-color-success': '--el-color-danger'})`,
@@ -163,18 +163,17 @@ const state = reactive({
       }, () => row.step_tag) : "-"
     },
     {
-      key: 'case_name',
+      key: 'name',
       label: '接口名称',
       width: '',
       align: 'center',
       show: true,
-      lookupCode: 'api_report_run_type'
     },
     {
       key: 'status_code', label: 'HttpCode', width: '', align: 'center', show: true,
       render: ({row}) => row.status_code ? h(ElTag, {
-        type: row.status_code == 200 ? "success" : "warning",
-      }, () => row.status_code == 200 ? "200 OK" : row.status_code) : "-"
+        type: row.status_code === 200 ? "success" : "warning",
+      }, () => row.status_code === 200 ? "200 OK" : row.status_code) : "-"
     },
     {
       key: 'elapsed_ms',
@@ -298,7 +297,7 @@ const getStatisticsDataByDebug = (step_results) => {
   statisticsData.step_pass_rate = Math.round((statisticsData.count_step_success / statisticsData.actual_run_count) * 100)
 
   step_results.forEach((e) => {
-    if (e.step_type == 'api') {
+    if (e.step_type === 'api') {
       e.url = e.session_data.req_resp.request.url
       e.method = e.session_data.req_resp.request.method
       e.status_code = e.session_data.req_resp.response.status_code
@@ -306,7 +305,7 @@ const getStatisticsDataByDebug = (step_results) => {
       elapsed_ms += e.session_data.stat.elapsed_ms
       statisticsData.count_request_time += e.duration
       statisticsData.count_case++
-      if (e.status == "SUCCESS") {
+      if (e.status === "SUCCESS") {
         statisticsData.count_case_success += 1
       } else {
         statisticsData.count_case_fail += 1
@@ -378,12 +377,12 @@ const showReport = () => {
 }
 
 const toApiInfo = (row) => {
-  router.push({name: "EditApiInfo", query: {editType: "update", id: row.case_id}})
+  router.push({name: "EditApiInfo", query: {editType: "update", id: row.source_id}})
 }
 
 // 获取报告状态，通过，不通过
 const reportStatus = computed(() => {
-  return state.statisticsData?.success === 1 || state.statisticsData?.success == true
+  return state.statisticsData?.success === 1 || state.statisticsData?.success
 })
 
 watch(
@@ -402,7 +401,6 @@ watch(
 watch(
     () => props.report_id,
     (val) => {
-      console.log("report_id", val)
       if (val) {
         initReport()
       }

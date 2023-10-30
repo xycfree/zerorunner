@@ -18,11 +18,12 @@ from multiprocessing import Queue
 import emoji
 from fastapi.encoders import jsonable_encoder
 from loguru import logger
+from requests_toolbelt import MultipartEncoder
 from sqlalchemy import Row
 from sqlalchemy.orm import DeclarativeMeta
 
 from zerorunner import exceptions, __version__
-from zerorunner.models import VariablesMapping
+from zerorunner.models.base import VariablesMapping
 
 
 def set_os_environ(variables_mapping):
@@ -320,6 +321,8 @@ def default_serialize(obj):
             return {key: default_serialize(value) for key, value in data.items()}
         if hasattr(obj, "__class__") and isinstance(obj.__class__, DeclarativeMeta):
             return {c.name: default_serialize(getattr(obj, c.name)) for c in obj.__table__.columns}
+        if isinstance(obj, MultipartEncoder):
+            return repr(obj)
         return jsonable_encoder(obj)
     except TypeError as err:
         return repr(obj)
