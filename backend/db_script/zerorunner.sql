@@ -416,11 +416,7 @@ CREATE TABLE `celery_task_record`  (
   `kwargs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `args` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-<<<<<<< HEAD
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-=======
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
->>>>>>> xyc/master
 
 -- ----------------------------
 -- Records of celery_task_record
@@ -1029,11 +1025,7 @@ CREATE TABLE `project_info`  (
   INDEX `id_index`(`id`) USING BTREE,
   INDEX `name_index`(`name`) USING BTREE,
   INDEX `enabled_flag_index`(`enabled_flag`) USING BTREE
-<<<<<<< HEAD
-)  ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
-=======
-) ENGINE = InnoDB AUTO_INCREMENT = 1699677678757617616 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
->>>>>>> xyc/master
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of project_info
