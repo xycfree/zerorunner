@@ -34,13 +34,13 @@ class Base:
     #     """将类名小写并转化为表名 __tablename__"""
     #     return cls.__name__.lower()
 
-    @declared_attr
-    def __tablename__(cls) -> str:
-        import re
-        # 如果没有指定__tablename__  则默认使用model类名转换表名字
-        name_list = re.findall(r"[A-Z][a-z\d]*", cls.__name__)
-        # 表名格式替换成 下划线_格式 如 MallUser 替换成 mall_user
-        return "_".join(name_list).lower()
+    # @declared_attr
+    # def __tablename__(cls) -> str:
+    #     import re
+    #     # 如果没有指定__tablename__  则默认使用model类名转换表名字
+    #     name_list = re.findall(r"[A-Z][a-z\d]*", cls.__name__)
+    #     # 表名格式替换成 下划线_格式 如 MallUser 替换成 mall_user
+    #     return "_".join(name_list).lower()
 
 
     id = mapped_column(BigInteger(), nullable=False, primary_key=True, autoincrement=True, comment='主键')
