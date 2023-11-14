@@ -62,6 +62,7 @@ class ProjectInfo(Base):
 
     @classmethod
     def get_project_id_list(cls):
+        # with_entities()可以添加或删除（简单地说：替换）模型或列；您甚至可以使用它来修改查询，用您自己的函数替换选定的实体  通过该方法指定结果要返回的列
         return cls.query.filter(cls.enabled_flag == 1) \
             .with_entities(cls.id,
                            cls.responsible_name,
