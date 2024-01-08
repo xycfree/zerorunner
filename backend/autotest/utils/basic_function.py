@@ -10,6 +10,8 @@ import uuid
 
 import arrow as arrow
 
+from zerorunner.ext.db import DB
+
 
 # -----------------------------------  随机  ----------------------------------------------
 
