@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 import typing
 
 from sqlalchemy import String, Text, Integer, DateTime, select, update, Index, JSON, Boolean
@@ -19,9 +19,9 @@ class User(Base):
     password = mapped_column(Text, nullable=False, comment='密码')
     email = mapped_column(String(64), comment='邮箱')
     roles = mapped_column(JSON, comment='用户类型')
-    status = mapped_column(Integer, comment='用户状态  1 锁定， 0 正常', default=0)
+    status = mapped_column(Integer, comment='用户状态  1 正常， 0 锁定', default=0)
     nickname = mapped_column(String(255), comment='用户昵称')
-    user_type = mapped_column(Integer, comment='用户类型 10 管理人员, 20 测试人员', default=20)
+    user_type = mapped_column(Integer, comment='用户类型 10 管理人员, 20 测试人员 30 只读用户', default=20)
     remarks = mapped_column(String(255), comment='用户描述')
     avatar = mapped_column(Text, comment='头像')
     tags = mapped_column(JSON, comment='标签')
@@ -151,8 +151,8 @@ class Roles(Base):
             q.append(cls.name.like(f'%{params.name}%'))
         if params.role_type:
             q.append(cls.role_type == params.role_type)
-        else:
-            q.append(cls.role_type == 10)
+        # else:
+        #     q.append(cls.role_type == 10)
         u = aliased(User)
         stmt = select(cls.get_table_columns(),
                       u.nickname.label("created_by_name"),
@@ -169,8 +169,8 @@ class Roles(Base):
         q = [cls.enabled_flag == 1, cls.id.in_(ids)]
         if role_type:
             q.append(cls.role_type == role_type)
-        else:
-            q.append(cls.role_type == 10)
+        # else:
+        #     q.append(cls.role_type == 10)
 
         stmt = select(cls.get_table_columns()).where(*q)
         return await cls.get_result(stmt)

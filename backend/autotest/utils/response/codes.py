@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 
 
 from enum import Enum
@@ -33,6 +33,7 @@ class CodeEnum(Enum):
 
     # 用户状态 验证  11000 - 12000
     PARTNER_CODE_TOKEN_EXPIRED_FAIL = (11000, "用户信息以已过期 😂")  # token已过期
+    PARTNER_CODE_AUTH = (11001, "只读用户权限限制")  # token已过期
 
     # 参数类型 12000 - 13000
     PARTNER_CODE_PARAMS_FAIL = (12000, "必填参数不能为空 😅")  # 必填参数不能为空
@@ -63,3 +64,6 @@ class CodeEnum(Enum):
 
     # task 定时任务 18000 - 19000
     TASK_NAME_EXIST = (18000, "定时任务名称以存在")
+
+    # file 文件状态 20000 - 20010
+    FILE_NOT_EXIST = (20000, "文件不存在!")

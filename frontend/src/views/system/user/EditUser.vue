@@ -53,8 +53,10 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="用户类型">
               <el-select v-model="state.form.user_type" placeholder="请选择" clearable class="w100">
-                <el-option label="超级管理员" :value="10"></el-option>
+<!--                禁止新增超管-->
+<!--                <el-option label="超级管理员" :value="10"></el-option>-->
                 <el-option label="普通用户" :value="20"></el-option>
+                <el-option label="只读用户" :value="30"></el-option>
               </el-select>
             </el-form-item>
           </el-col>

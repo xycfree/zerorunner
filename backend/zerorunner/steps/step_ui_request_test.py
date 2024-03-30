@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 from zerorunner.models.step_model import TStep, TUiRequest, TConfig
 from zerorunner.runner import SessionRunner
 from zerorunner.steps.step import Step
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     step_list = [Step(RunUiStep(step1)), Step(RunUiStep(step2))]
 
     driver_setting = DriverSetting(
-        command_executor="http://xiaobaicodes.com:4444/wd/hub",
+        command_executor="http://waltercodes.com:4444/wd/hub",
         headless=False
     )
     driver_app = ZeroDriver(driver_setting)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 import json
 
 from fastapi import WebSocket, WebSocketDisconnect, APIRouter
@@ -33,7 +33,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
                 ui_case_info = await UiCaseServer.handel_ui_case2run_schemas(new_data.data)
                 if id not in driver_app_obj:
                     driver_setting = DriverSetting(
-                        command_executor="http://xiaobaicodes.com:4444/wd/hub",
+                        command_executor="http://waltercodes.com:4444/wd/hub",
                         headless=False
                     )
                     driver_app = ZeroDriver(driver_setting)

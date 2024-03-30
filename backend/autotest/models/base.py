@@ -42,7 +42,6 @@ class Base:
     #     # 表名格式替换成 下划线_格式 如 MallUser 替换成 mall_user
     #     return "_".join(name_list).lower()
 
-
     id = mapped_column(BigInteger(), nullable=False, primary_key=True, autoincrement=True, comment='主键')
     creation_date = mapped_column(DateTime(), default=func.now(), comment='创建时间')
     created_by = mapped_column(BigInteger, comment='创建人ID')

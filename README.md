@@ -22,12 +22,12 @@
 - github 
 https://github.com/baizunxian/zerorunner
 - gitee
-https://gitee.com/xb_xiaobai/zerorunner
+https://gitee.com/xb_walter/zerorunner
 
 #### ⛱️ 线上预览
 
 - ZERO AUTOTEST
-  自动化测试平台在线预览 <a href="https://xiaobaicodes.com" target="_blank">https://xiaobaicodes.com</a>
+  自动化测试平台在线预览 <a href="https://waltercodes.com" target="_blank">https://waltercodes.com</a>
 
 - 首页
   ![](static/img/index.png)
@@ -123,6 +123,9 @@ yarn build
 4.merge远程分支到本地: git merge xyc/master
 undefined.文件推送：git  push
 ```
+
+## alembic async 配置参考
+https://github.com/jonra1993/fastapi-alembic-sqlmodel-async/blob/main/backend/app/alembic/env.py
 
 #### 💯 学习交流加 微信 群
 

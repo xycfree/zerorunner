@@ -76,7 +76,7 @@ const state = reactive({
     {label: "打印日志", content: "logger.info('logger')"},
   ],
   caseMenu: [
-    {label: "添加请求", content: "res = requests.post('https://xiaobaicodes.com/api/list').json()"},
+    {label: "添加请求", content: "res = requests.post('https://waltercodes.com/api/list').json()"},
     {label: "打印日志", content: "logger.info('logger')"},
   ]
 

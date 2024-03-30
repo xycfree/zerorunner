@@ -102,9 +102,11 @@ class TimedTasksService:
         return data
 
     @staticmethod
-    async def save_or_update(params: TimedTasksInSchema) -> typing.Dict:
-        """
-        保存或更新定时任务
+    async def save_or_update(params: TimedTasksInSchema, timed_task_type: int = None) -> typing.Dict:
+        """ 保存或更新定时任务
+        :param params: 定时任务保存更新schema
+        :param timed_task_type: 定时任务类型，默认None, 1: 监控类型监控任务
+        :return:
         """
 
         exist_tasks = await TimedTask.get_task_by_name(params.name)
@@ -119,7 +121,11 @@ class TimedTasksService:
             if exist_tasks:
                 raise ParameterError(CodeEnum.TASK_NAME_EXIST)
         if not params.task:
-            params.task = 'zerorunner.batch_async_run_testcase'
+            if not timed_task_type:
+                params.task = 'zerorunner.batch_async_run_testcase'
+            elif timed_task_type == 1:
+                params.task = 'zerorunner.batch_async_run_monitor_func'
+
         if params.case_ids:
             params.case_ids = list(map(str, params.case_ids))
         user_info = await current_user()
@@ -222,13 +228,14 @@ class TimedTasksService:
 
     @staticmethod
     async def run_once_job(params: TimedTasksId):
-        task_info = await TimedTask.get(params.id)
+        logger.info("run_once_job...")
+        task_info = await TimedTask.get(params.id)  # 获取定时任务信息
         if task_info:
             kwargs = json.loads(task_info.kwargs) if task_info.kwargs else None
             args = json.loads(task_info.args) if task_info.args else None
             celery.send_task(name=task_info.task,
                              args=args,
-                             kwargs=kwargs,
+                             kwargs=kwargs,  # 测试用例信息
                              queue=task_info.queue,
                              __task_type=20,
                              __business_id=task_info.id)

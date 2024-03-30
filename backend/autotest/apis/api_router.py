@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 
 
 from fastapi import APIRouter
@@ -13,7 +13,10 @@ from autotest.apis.api import (
     env,
     functions,
     timed_tasks,
-    relation_graph
+    relation_graph,
+    server_ip,
+    leakfix,
+    monitor_tasks
 )
 from autotest.apis.system import user, menu, roles, lookup, id_center, file, statistics
 from autotest.apis.ui import ui_page, ui_element, ui_case, ui_report
@@ -26,6 +29,8 @@ app_router = APIRouter()
 
 # api
 app_router.include_router(project.router, prefix="/project", tags=["project"])
+app_router.include_router(server_ip.router, prefix="/serverip", tags=["serverip"])
+app_router.include_router(leakfix.router, prefix="/leaks", tags=["leaks"])
 app_router.include_router(module.router, prefix="/module", tags=["module"])
 app_router.include_router(api_info.router, prefix="/apiInfo", tags=["apiInfo"])
 app_router.include_router(api_case.router, prefix="/apiCase", tags=["apiCase"])
@@ -33,6 +38,7 @@ app_router.include_router(api_report.router, prefix="/report", tags=["apiReport"
 app_router.include_router(data_source.router, prefix="/dataSource", tags=["dataSource"])
 app_router.include_router(functions.router, prefix="/functions", tags=["functions"])
 app_router.include_router(timed_tasks.router, prefix="/timedTasks", tags=["TimedTasks"])
+app_router.include_router(monitor_tasks.router, prefix="/monitorTasks", tags=["MonitorTasks"])
 app_router.include_router(env.router, prefix="/env", tags=["env"])
 app_router.include_router(statistics.router, prefix="/statistics", tags=["statistics"])
 app_router.include_router(relation_graph.router, prefix="/relationGraph", tags=["relationGraph"])

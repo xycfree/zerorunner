@@ -2,7 +2,9 @@ import traceback
 import typing
 import uuid
 from datetime import datetime
+from functools import wraps
 
+from fastapi import HTTPException
 from loguru import logger
 
 from autotest.models.system_models import User, Menu, Roles, UserLoginRecord
@@ -14,6 +16,7 @@ from autotest.utils.current_user import current_user
 from autotest.utils.des import encrypt_rsa_password, decrypt_rsa_password
 from autotest.utils.local import g
 from autotest.utils.response.codes import CodeEnum
+from autotest.utils.response.http_response import partner_success, resp_403
 from autotest.utils.serialize import default_serialize
 
 
@@ -214,8 +217,8 @@ class UserService:
         if not user_info or not user_info.roles:
             return []
         menu_ids = []
-        if user_info.user_type == 10:
-            all_menu = await Menu.get_menu_all()
+        if user_info.user_type == 10:  # 菜单权限-超管
+            all_menu = await Menu.get_menu_all()  # 获取所有菜单
             menu_ids += [i["id"] for i in all_menu]
         else:
             roles = await Roles.get_roles_by_ids(user_info.roles if user_info.roles else [])
@@ -251,3 +254,35 @@ class LoginRecordService:
             else:
                 row["roles"] = list(map(int, row["roles"].split(',')))
         return data
+
+
+def permission_required(permission):
+    """判断用户是否为只读用户"""
+    def decorator(f):
+        @wraps(f)
+        async def decorated_function(*args, **kwargs):
+
+            current_user_info = await current_user(permission)
+            logger.debug(f'用户信息: {current_user_info}')
+            if not current_user_info:
+                return partner_success(code=CodeEnum.PARTNER_CODE_TOKEN_EXPIRED_FAIL.code, msg='用户信息以已过期 😂')
+
+            user_info = await User.get(current_user_info.get("id"))
+            if user_info.user_type == 30:  # 只读用户
+                return partner_success(code=CodeEnum.PARTNER_CODE_AUTH.code, msg='只读用户权限限制操作 😂')
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
+async def user_auth_verify():
+    """用户类型依赖判断"""
+    current_user_info = await current_user(g.token)
+    logger.debug(f'用户信息: {current_user_info}')
+    if not current_user_info:
+        raise HTTPException(status_code=401, detail={
+            'code': CodeEnum.PARTNER_CODE_TOKEN_EXPIRED_FAIL.code, 'msg': CodeEnum.PARTNER_CODE_TOKEN_EXPIRED_FAIL.msg} )
+    user_info = await User.get(current_user_info.get("id"))
+    if user_info.user_type == 30:  # 只读用户
+        raise HTTPException(status_code=200, detail={
+            'code': CodeEnum.PARTNER_CODE_AUTH.code, 'msg': CodeEnum.PARTNER_CODE_AUTH.msg} )

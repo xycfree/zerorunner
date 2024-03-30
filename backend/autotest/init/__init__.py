@@ -1,2 +1,4 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
+
+from .logger_init import logger

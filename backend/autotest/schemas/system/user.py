@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 import typing
 
 from pydantic import BaseModel, Field
 
 from autotest.schemas.base import BaseSchema
-from autotest.utils.des import decrypt_rsa_password
+from autotest.utils.des import decrypt_rsa_password, encrypt_rsa_password
 
 
 class UserIn(BaseModel):
@@ -16,13 +16,24 @@ class UserIn(BaseModel):
     user_type: str = Field(None, description='用户类型')
     remarks: str = Field(None, description='用户描述')
     avatar: str = Field(None, description='头像')
+    status: str = Field(None, description='用户状态')
     tags: typing.List = Field(None, description='标签')
     roles: typing.List = Field(None, description='权限')
-    password: str = Field(description='标签', default=decrypt_rsa_password("123456"))
+    password: str = Field(description='标签', default=encrypt_rsa_password("123456"))
 
 
 class UserUpdate(BaseModel):
-    pass
+    id: int = Field(None, title="id", description='id')
+    username: str = Field(..., title="用户名不能为空！", description='用户名')
+    nickname: str = Field(..., title="用户昵称不能为空！", description='用户昵称')
+    email: str = Field(None, description='邮箱')
+    user_type: str = Field(None, description='用户类型')
+    remarks: str = Field(None, description='用户描述')
+    avatar: str = Field(None, description='头像')
+    status: str = Field(None, description='用户状态')
+    tags: typing.List = Field(None, description='标签')
+    roles: typing.List = Field(None, description='权限')
+    # password: str = Field(description='标签', default=encrypt_rsa_password("123456"))
 
 
 class UserDel(BaseModel):

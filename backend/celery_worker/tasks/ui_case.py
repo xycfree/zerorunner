@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 import typing
 from threading import Lock
 
@@ -43,7 +43,7 @@ async def async_run_ui(ui_id: typing.Union[str, int], report_id: [str, int] = No
     ui_case_info = await UiCaseServer.handel_ui_case2run_schemas(ui_case_info)
     session_runner = SessionRunner()
     driver_setting = DriverSetting(
-        command_executor="http://xiaobaicodes.com:4444/wd/hub",
+        command_executor="http://waltercodes.com:4444/wd/hub",
         headless=False
     )
     zero_driver = ZeroDriver(driver_setting)

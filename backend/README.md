@@ -16,7 +16,7 @@ https://github.com/baizunxian/zerorunner
 
 #### ⛱️ 线上预览
 
-- ZERORUNNER 自动化测试平台在线预览 <a href="https://xiaobaicodes.com:8888" target="_blank">https://xiaobaicodes.com:8888</a>
+- ZERORUNNER 自动化测试平台在线预览 <a href="https://waltercodes.com:8888" target="_blank">https://waltercodes.com:8888</a>
 
 
 #### 🚧 项目启动初始化
@@ -56,10 +56,28 @@ celery -A celery_worker.worker.job beat -S celery_worker.scheduler.schedulers:Da
 
 # 定时任务心跳启动
 celery -A celery_worker.worker.job beat  -l INFO 
+celery -A celery_worker.worker beat  -l INFO 
+
 
 
 # alembic迁移命令
+https://thedmitry.pw/blog/2023/08/fastapi-async-sqlalchemy-pytest-and-alembic/
+# 新增表需要在autotest/models/__init__.py文件中导入表文件
+
+# alembic async 配置参考
+# https://github.com/jonra1993/fastapi-alembic-sqlmodel-async/blob/main/backend/app/alembic/env.py
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(f"当前路径:{BASE_DIR}")
+sys.path.insert(0, BASE_DIR)
+# SQLALCHEMY 模式需要导入 Base
+from autotest.models.base import Base
+target_metadata = Base.metadata  # SQLALCHEMY 模式同步
+# target_metadata = SQLModel.metadata  # sqlmodel 模式同步
+
 alembic init alembic  # 初始化
+alembic init -t async alembic  # 异步初始化
+
 alembic revision --autogenerate -m "init"  # 提交修改
 alembic upgrade head  # 更新
 alembic downgrade head  # 降级

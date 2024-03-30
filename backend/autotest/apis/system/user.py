@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 
 from fastapi import APIRouter, Request, Form
 
 from autotest.utils.local import g
 from autotest.utils.response.codes import CodeEnum
 from autotest.utils.response.http_response import partner_success
-from autotest.schemas.system.user import UserLogin, UserQuery, UserIn, UserResetPwd, UserDel
+from autotest.schemas.system.user import UserLogin, UserQuery, UserIn, UserResetPwd, UserDel, UserUpdate
 from autotest.services.system.user import UserService
 from loguru import logger
 
@@ -33,7 +33,7 @@ async def user_list(params: UserQuery):
 
 
 @router.post('/saveOrUpdate', description="更新保存用户")
-async def save_or_update(user_params: UserIn):
+async def save_or_update(user_params: UserUpdate):
     """
     更新保存用户
     :return:

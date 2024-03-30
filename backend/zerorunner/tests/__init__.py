@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from queue import Queue
 import threading

@@ -2,7 +2,7 @@
   "name": "zerorunner",
   "version": "2.1.5",
   "description": "一个自动化测试平台",
-  "author": "xiaobai",
+  "author": "walter",
   "license": "MIT",
   "scripts": {
     "dev": "vite --force",

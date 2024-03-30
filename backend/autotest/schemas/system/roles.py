@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 from pydantic import BaseModel, Field, root_validator
 import typing
 from autotest.schemas.base import BaseSchema
@@ -24,7 +24,7 @@ class RoleIn(BaseModel):
 class RoleQuery(BaseSchema):
     id: int = Field(None, description="角色id")
     name: str = Field(None, description="角色名称")
-    role_type: str = Field(10, description="角色类型")
+    role_type: str = Field(None, description="角色类型")
 
 
 class RoleDel(BaseModel):

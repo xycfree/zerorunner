@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 from autotest.models.ui_models import UiElement
 from autotest.schemas.ui.ui_element import UiElementIn, UiElementQuery
 

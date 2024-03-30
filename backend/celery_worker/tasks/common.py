@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 
 from celery_worker.worker import celery
 from celery_worker.base import run_async

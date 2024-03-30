@@ -6,6 +6,14 @@
         width="30%">
       <el-form ref="formRef" :model="state.form" :rules="state.rules" label-width="80px">
         <el-row :gutter="35">
+
+
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+            <el-form-item label="服务器IP" prop="ip">
+              <el-input v-model="state.form.ip" placeholder="服务器IP" clearable></el-input>
+            </el-form-item>
+          </el-col>
+
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
             <el-form-item label="项目名称" prop="name">
               <el-input v-model="state.form.name" placeholder="项目名称" clearable></el-input>
@@ -13,40 +21,57 @@
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="负责人" prop="name">
-              <el-input v-model="state.form.responsible_name" placeholder="负责人" clearable></el-input>
+            <el-form-item label="管控版本" prop="name">
+              <el-input v-model="state.form.epp_version" placeholder="管控版本" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="测试人员" prop="name">
-              <el-input v-model="state.form.test_user" placeholder="测试人员" clearable></el-input>
+            <el-form-item label="CPU">
+              <el-input v-model="state.form.cpu" placeholder="cpu" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="开发人员" prop="name">
-              <el-input v-model="state.form.dev_user" placeholder="开发人员" clearable></el-input>
+            <el-form-item label="内存/GB">
+              <el-input v-model="state.form.mem" placeholder="内存" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="关联应用">
-              <el-input v-model="state.form.publish_app" placeholder="关联应用" clearable></el-input>
+            <el-form-item label="磁盘/GB">
+              <el-input v-model="state.form.disk_total" placeholder="磁盘" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="简要描述">
-              <el-input v-model="state.form.simple_desc" placeholder="简要描述" clearable></el-input>
+            <el-form-item label="服务器性质">
+              <el-input v-model="state.form.server_type" placeholder="服务器性质" clearable></el-input>
             </el-form-item>
           </el-col>
 
+
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-            <el-form-item label="关联配置">
-              <el-input v-model="state.form.config_id" placeholder="关联配置" clearable></el-input>
+            <el-form-item label="操作系统" prop="system_type">
+              <el-select v-model="state.form.system_type" clearable placeholder="操作系统" style="width: 100%">
+                <el-option
+                    v-for="item in state.systemList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                >
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
+
+
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+            <el-form-item label="备注">
+              <el-input v-model="state.form.remark" placeholder="备注" clearable></el-input>
+            </el-form-item>
+          </el-col>
+
 
         </el-row>
       </el-form>
@@ -62,23 +87,22 @@
 
 <script setup name="saveOrUpdateServerIp">
 import {reactive, ref} from 'vue';
-import {userServerIpApi} from "/@/api/useAutoApi/serverIp";
 import {ElMessage} from "element-plus";
+import {userServerIpApi} from "/src/api/useServersApi/serverIp";
 
 const emit = defineEmits(["getList"])
 
 const createForm = () => {
   return {
+    ip: '',
     name: '', // 项目名称
-    project_id: '', // 项目id
-    config_id: null, // 配置id
-    leader_user: '', // 负责人
-    test_user: '', // 测试负责人
-    publish_app: '', // 关联应用
-    simple_desc: '', // 简要描述
-    remarks: '', // 简要描述
-    priority: '', // 优先级
-    module_packages: null, // 配置信息
+    epp_version: '',
+    cpu: 0,
+    mem: 0.0,
+    disk_total: 0.0,
+    system_type: '',
+    server_type: '',
+    remark: ''
   }
 }
 const formRef = ref()
@@ -88,9 +112,14 @@ const state = reactive({
   // 参数请参考 `/src/router/route.ts` 中的 `dynamicRoutes` 路由菜单格式
   form: createForm(),
   rules: {
-    name: [{required: true, message: '请输入项目名称', trigger: 'blur'},],
+    ip: [{required: true, message: '请输入服务器IP', trigger: 'blur'},],
+    name: [{required: true, message: '请输入名称', trigger: 'blur'},],
   },
   menuData: [], // 上级菜单数据
+  systemList: [{"id": 0, "name": "未知"}, {"id": 1, "name": "linux"}, {"id": 2, "name": "ubuntu"}, {
+    "id": 3,
+    "name": "mac"
+  }, {"id": 4, "name": "windows"}],
 });
 
 
@@ -115,12 +144,19 @@ const onCancel = () => {
 // 新增
 const saveOrUpdate = () => {
   formRef.value.validate((valid) => {
+    // console.log('validate is value:', valid)
     if (valid) {
       userServerIpApi().saveOrUpdate(state.form)
-          .then(() => {
-            ElMessage.success('操作成功');
-            emit('getList')
-            closeDialog(); // 关闭弹窗
+          .then((res) => {
+            console.log("res is value:", res)
+            if (res.detail  &&  res.detail.code === 11001) {
+              ElMessage.error('只读用户权限限制');
+            } else {
+              ElMessage.success('操作成功');
+              emit('getList')
+              closeDialog(); // 关闭弹窗
+            }
+
           })
       console.log(state.form, 'state.menuForm')
     }

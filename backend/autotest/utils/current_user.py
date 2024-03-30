@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 import typing
 from autotest.utils.local import g
 from autotest.utils.consts import TEST_USER_INFO

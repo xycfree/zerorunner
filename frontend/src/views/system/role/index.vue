@@ -34,7 +34,7 @@ const tableRef = ref();
 const state = reactive({
   columns: [
     {
-      key: 'name', label: '角色名称', width: '', align: 'center', show: true,
+      key: 'name', label: '角色名称', width: 'auto', align: 'center', show: true,
       render: ({row}) => h(ElButton, {
         link: true,
         type: "primary",
@@ -43,7 +43,11 @@ const state = reactive({
         }
       }, () => row.name)
     },
-    {key: 'role_type', label: '权限类型', width: '', align: 'center', show: true},
+    {key: 'role_type', label: '权限类型', width: 'auto', align: 'center', show: true,
+      render: ({row}) => h(ElTag, {
+        type: "info",
+      }, () => row.role_type === 10 ? "菜单权限" : row.role_type === 20 ? "用户权限" : "只读权限")
+    },
     {
       key: 'status', label: '角色状态', width: '', align: 'center', show: true,
       render: ({row}) => h(ElTag, {

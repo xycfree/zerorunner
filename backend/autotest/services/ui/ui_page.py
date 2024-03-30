@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 from autotest.exceptions.exceptions import ParameterError
 from autotest.models.ui_models import UiPage, UiElement
 from autotest.schemas.ui.ui_page import UiPageQuery, UiPageIn, UiPageId

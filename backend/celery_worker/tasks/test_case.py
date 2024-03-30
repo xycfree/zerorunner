@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 import asyncio
 import time
 import typing
@@ -226,7 +226,6 @@ def run_step_by_queue(testcase_queue: Queue, report_id: typing.Union[str, int], 
         testcase_static_key = TEST_EXECUTE_STATS.format(report_id)
         runner = ZeroRunner()
         summary = runner.run_tests(testcase)
-
 
         static_dict = r.get(testcase_static_key)
         if r_lock.acquire():

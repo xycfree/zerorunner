@@ -1,4 +1,4 @@
-import request from '/@/utils/request';
+import request from '/src/utils/request';
 
 /**
  * 项目使用接口
@@ -28,12 +28,6 @@ export function userServerIpApi() {
         data,
       });
     },
-    getTree: (data) => {
-      return request({
-        url: '/serverip/getServerIpTree',
-        method: 'POST',
-        data,
-      });
-    },
+
   };
 }

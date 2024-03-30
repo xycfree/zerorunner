@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiaobai
+# @author: walter
 
 from autotest.db.session import async_engine
 from autotest.models.base import Base
@@ -9,6 +9,8 @@ from autotest.models import celery_beat_models
 from autotest.models import coverage_models
 from autotest.models import system_models
 from autotest.models import tools_models
+from autotest.models import server_ip_models
+from autotest.models import leakfix_models
 
 
 async def init_db():

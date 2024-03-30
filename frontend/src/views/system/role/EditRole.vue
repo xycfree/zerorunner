@@ -18,7 +18,7 @@
               </template>
               <el-select v-model="state.form.role_type" clearable placeholder="角色标识">
                 <el-option
-                    v-for="item in [{role_type: 10, label:'菜单权限'}]"
+                    v-for="item in [{role_type: 10, label:'菜单权限'}, {role_type: 20, label:'用户权限'}, {role_type: 30, label:'只读权限'}]"
                     :key="item.role_type"
                     :label="item.label"
                     :value="item.role_type"

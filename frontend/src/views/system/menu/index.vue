@@ -34,6 +34,7 @@ import {h, onMounted, reactive, ref} from 'vue';
 import {useMenuApi} from '/@/api/useSystemApi/menu';
 import {ElButton, ElMessage, ElMessageBox} from 'element-plus';
 import EditMenu from '/@/views/system/menu/EditMenu.vue';
+import {useProjectApi} from "/@/api/useAutoApi/project";
 
 
 const EditRef = ref();
@@ -126,11 +127,17 @@ const deleted = (row) => {
     cancelButtonText: '取消',
     type: 'warning',
   })
-      .then(() => {
-        ElMessage.success('删除成功');
+       .then(() => {
+            useMenuApi().deleted({id: row.id})
+            .then(() => {
+              ElMessage.success('删除成功');
+              getList()
+            })
       })
       .catch(() => {
       });
+
+
 };
 onMounted(() => {
   getList()

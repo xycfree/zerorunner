@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 from autotest.db.my_redis import MyAsyncRedis
 from config import config
-
+from loguru import logger
 ZRedis = None
 
 
@@ -21,4 +21,5 @@ async def init_async_redis_pool(app: typing.Optional[FastAPI] = None) -> MyAsync
     ZRedis = redis
     if app is not None:
         app.state.redis = redis
+    # logger.debug(await app.state.redis.info())
     return redis
