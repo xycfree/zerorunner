@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: walter
+# @author: __walter__
 
 import click
 import uvicorn

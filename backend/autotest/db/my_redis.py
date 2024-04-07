@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @author: xiao bai
+# @author: __walter__
 
 import json
 import pickle
