@@ -16,6 +16,7 @@ class RequestMode(str, Enum):
     FORM_DATA = "form_data"
     FILE = "file"
     X_WWW_FORM_URLENCODED = "x_www_form_urlencoded"
+    PARAMS = "params"
     none = "none"
 
 
