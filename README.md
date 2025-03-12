@@ -4,7 +4,7 @@
 - 基于 python3 + fastApi + celery + sqlalchemy + redis
 
 - 使用软件版本
-- python version 3.9.6
+- python version <=3.13
 - mysql version 5.7.43
 - redis version 6.0.9
 
@@ -27,7 +27,7 @@ https://gitee.com/xb_walter/zerorunner
 #### ⛱️ 线上预览
 
 - ZERO AUTOTEST
-  自动化测试平台在线预览 <a href="https://waltercodes.com" target="_blank">https://waltercodes.com</a>
+  自动化测试平台在线预览 <a href="https://zerorunner.cn" target="_blank">https://zerorunner.cn</a>
 
 - 首页
   ![](static/img/index.png)
