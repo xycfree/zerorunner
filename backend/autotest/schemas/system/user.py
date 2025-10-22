@@ -5,11 +5,7 @@ import typing
 from pydantic import BaseModel, Field
 
 from autotest.schemas.base import BaseSchema
-<<<<<<< HEAD
-from autotest.utils.des import decrypt_rsa_password, encrypt_rsa_password
-=======
 from autotest.utils.des import encrypt_rsa_password
->>>>>>> xyc/master
 
 
 class UserIn(BaseModel):
@@ -23,11 +19,7 @@ class UserIn(BaseModel):
     status: str = Field(None, description='用户状态')
     tags: typing.List = Field(None, description='标签')
     roles: typing.List = Field(None, description='权限')
-<<<<<<< HEAD
-    password: str = Field(description='标签', default=encrypt_rsa_password("123456"))
-=======
     password: str = Field(description='标签', default_factory=lambda : encrypt_rsa_password("123456"))
->>>>>>> xyc/master
 
 
 class UserUpdate(BaseModel):
