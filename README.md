@@ -4,7 +4,7 @@
 - 基于 python3 + fastApi + celery + sqlalchemy + redis
 
 - 使用软件版本
-- python version <=3.13
+- python version <3.13
 - mysql version 5.7.43
 - redis version 6.0.9
 
@@ -18,7 +18,7 @@
 - element-plus  version 2.2.26
 
 
-#### 💒 平台地址地址
+#### 💒 平台git地址
 - github 
 https://github.com/baizunxian/zerorunner
 - gitee
@@ -26,8 +26,10 @@ https://gitee.com/xb_walter/zerorunner
 
 #### ⛱️ 线上预览
 
-- ZERO AUTOTEST
-  自动化测试平台在线预览 <a href="https://zerorunner.cn" target="_blank">https://zerorunner.cn</a>
+- ZERORUNNER (开源版)
+  在线预览 <a href="https://zerorunner.cn" target="_blank">https://zerorunner.cn:8999</a>
+- ZERORUNNER (非开源版本)
+  在线预览 <a href="https://zerorunner.cn" target="_blank">https://zerorunner.cn</a>
 
 - 首页
   ![](static/img/index.png)
@@ -43,14 +45,16 @@ https://gitee.com/xb_walter/zerorunner
 git clone https://github.com/baizunxian/zerorunner.git
 
 # 数据库脚本 将内容复制数据库执行 需要新建数据库 zerorunner
-backend/script/zerorunner.sql  
+backend/db_script/zerorunner.sql  
 
 # MySQL版本 8.0.23 查询问题
 # 问题 which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
 # 执行一下语句
 set @@global.sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
-
+# 配置修改
+# 复制backend/.env.example 为 .env 文件
+# 修改对应配置
 # 修改对应的数据库地址，redis 地址
 backend/config.py
 # 或者

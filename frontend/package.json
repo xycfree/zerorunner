@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite --force",
     "build": "vite build",
+    "build-old": "vite build --mode production-old",
     "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
   },
   "dependencies": {
@@ -15,7 +16,7 @@
     "axios": "^1.2.1",
     "cropperjs": "^1.5.13",
     "echarts": "^5.4.1",
-    "element-plus": "^2.2.26",
+    "element-plus": "2.11.3",
     "js-cookie": "^3.0.1",
     "mitt": "^3.0.0",
     "monaco-editor": "^0.34.1",

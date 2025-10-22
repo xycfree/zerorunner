@@ -4,9 +4,11 @@
       <div class="mb8">
         <div>
           <el-input v-model="state.listQuery.name" placeholder="请输入用例名称" style="max-width: 180px"></el-input>
+          <el-input v-model="state.listQuery.project_name" placeholder="请输入项目名称"
+                    style="max-width: 180px"></el-input>
           <el-button type="primary" class="ml10" @click="getList">查询
           </el-button>
-          <el-button type="success" class="ml10" @click="onOpenSaveOrUpdate('save', null)">新增
+          <el-button type="success" class="ml10" @click="() =>  CreateStepPageRef?.onOpen()">新增
           </el-button>
         </div>
       </div>
@@ -198,6 +200,9 @@
         </span>
       </template>
     </el-dialog>
+
+    <CreateStepPage ref="CreateStepPageRef"></CreateStepPage>
+
   </div>
 </template>
 
@@ -223,6 +228,8 @@ import {useProjectApi} from "/@/api/useAutoApi/project";
 import {getMethodColor} from "/@/utils/case";
 import {useUserInfo} from '/@/stores/userInfo';
 import ApiRelationGraph from "/@/components/RelationGraph/ApiRelationGraph.vue";
+import StepIcon from "/@/components/Z-StepController/StepIcon.vue";
+import CreateStepPage from "./CreateStepPage.vue"
 
 
 const userInfoStore = useUserInfo()
@@ -230,6 +237,7 @@ const userInfoStore = useUserInfo()
 const ReportDetail = defineAsyncComponent(() => import("/@/components/Z-Report/ApiReport/ReportInfo/ReportDetail.vue"))
 
 const reportDetailRef = ref();
+const CreateStepPageRef = ref();
 const ApiRelationGraphRef = ref();
 const importFormRef = ref();
 const tableRef = ref();
@@ -241,6 +249,15 @@ const state = reactive({
     {label: '序号', columnType: 'index', width: 'auto', show: true},
     {key: 'id', label: 'ID', columnType: 'string', width: 'auto', show: true},
     {
+      key: 'method', label: '步骤类型', width: '80', show: true, align: 'center',
+      render: ({row}) => {
+        return h(StepIcon, {
+          stepType: row.step_type,
+          size: '20px'
+        },)
+      }
+    },
+    {
       key: 'name', label: '用例名', width: '', show: true,
       render: ({row}) => h(ElButton, {
         link: true,
@@ -250,12 +267,16 @@ const state = reactive({
         }
       }, () => row.name)
     },
+
     {
-      key: 'method', label: '请求方式', width: '', show: true,
-      render: ({row}) => h(ElTag, {
-        type: "",
-        style: {"background": getMethodColor(row.method), color: "#ffffff",}
-      }, () => row.method)
+      key: 'method', label: '请求方式', width: '80', show: true, align: 'center',
+      render: ({row}) => {
+        return row.method ? h(ElTag, {
+          type: "primary",
+          color: getMethodColor(row.method),
+          style: {"background": getMethodColor(row.method), color: "#ffffff",}
+        }, () => row.method) : "-"
+      }
     },
     {key: 'url', label: '请求地址', width: 'auto', show: true},
     {key: 'project_name', label: '所属项目', width: 'auto', show: true},
@@ -341,6 +362,7 @@ const state = reactive({
     page: 1,
     pageSize: 20,
     name: '',
+    project_name: '',
     created_by: null,
   },
   selectionData: [],

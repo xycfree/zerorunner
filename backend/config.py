@@ -5,7 +5,8 @@ import typing
 from pathlib import Path
 import socket
 
-from pydantic import AnyHttpUrl, Field, BaseSettings
+from pydantic import BaseSettings, AnyHttpUrl, Field, ValidationError
+
 
 project_banner = """
 ███████╗███████╗██████╗  ██████╗ ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗
@@ -79,9 +80,9 @@ class Configs(BaseSettings):
     # celery worker
     broker_url: str = Field(..., env="CELERY_BROKER_URL")
     # result_backend: str = Field(..., env="CELERY_RESULT_BACKEND")
-    task_serializer: str = "pickle"
-    result_serializer: str = "pickle"
-    accept_content: typing.Tuple = ("pickle", "json",)
+    task_serializer: str = "json"
+    result_serializer: str = "json"
+    accept_content: typing.Tuple = ("json",)
     task_protocol: int = 2
     timezone: str = "Asia/Shanghai"
     enable_utc: bool = False
@@ -151,6 +152,7 @@ class Configs(BaseSettings):
         env_file_encoding = "utf-8"
 
 
-config = Configs()
-
-
+try:
+    config = Configs()
+except ValidationError as e:
+    raise ValueError(f"配置文件错误 请检查是否创建.env文件以及配置是否存在: {e}")

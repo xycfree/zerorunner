@@ -230,6 +230,8 @@ class ApiInfo(Base):
             q.append(cls.id.in_(params.ids))
         if params.api_status:
             q.append(cls.api_status == params.api_status)
+        if params.project_name:
+            q.append(ProjectInfo.name.like(f"%{params.project_name}%"))
         u = aliased(User)
 
         sort_type = 'asc' if params.sort_type == 0 else 'desc'
@@ -254,6 +256,7 @@ class ApiInfo(Base):
                       cls.name,
                       cls.url,
                       cls.method,
+                      cls.step_type,
                       cls.project_id,
                       cls.module_id,
                       cls.code_id,
