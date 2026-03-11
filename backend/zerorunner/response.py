@@ -9,11 +9,13 @@ import jmespath
 from jmespath.exceptions import JMESPathError
 from jsonpath import jsonpath
 from loguru import logger
+from pydantic import BaseModel, Field
 from requests import Response
 
 from zerorunner import exceptions
 from zerorunner.exceptions import ValidationFailure, ParamsError, ExtractFailure
-from zerorunner.models.base import CheckModeEnum, ExtractTypeEnum, VariablesMapping, FunctionsMapping, Validators
+from zerorunner.models.base import CheckModeEnum, ExtractTypeEnum, VariablesMapping, FunctionsMapping, Validators, \
+    TStepTypeEnum
 from zerorunner.models.step_model import ExtractData
 from zerorunner.parser import parse_data, parse_string_value, Parser
 
@@ -127,7 +129,18 @@ def uniform_validator(validator):
     }
 
 
-class ResponseObjectBase(object):
+class ResponseData(BaseModel):
+    step_type: typing.Optional[str] = Field("", description="步骤类型")
+    text: typing.Optional[str] = Field("", description="响应文本")
+    json_data: typing.Optional[typing.Any] = Field(None, description="json 数据")
+    data: typing.Optional[typing.Any] = Field(None, description="响应数据")
+    cookies: typing.Optional[typing.Dict] = Field({}, description="响应cookies")
+    status_code: typing.Optional[int] = Field(0, description="响应状态码")
+    headers: typing.Optional[typing.Dict] = Field({}, description="响应头")
+    duration: typing.Optional[typing.Union[float]] = Field(0, description="执行时间")
+
+
+class ResponseObject(object):
 
     def __copy__(self):
         pass
@@ -135,27 +148,51 @@ class ResponseObjectBase(object):
     def __deepcopy__(self, memo):
         pass
 
-    def __init__(self, resp_obj: Response, parser: Parser = Parser()):
-        """初始化
+    def __init__(self, resp_obj,
+                 step_type: TStepTypeEnum = None,
+                 parser: Parser = Parser()):
+        """ 使用 requests.Response 初始化 ResponseObject
+
         Args:
             resp_obj (instance): requests.Response instance
+
         """
-        self.resp_obj = resp_obj
-        self.parser = parser
-        self.validation_results: typing.Dict = {}
         self.extract_results: typing.List = []
+        self.resp_obj = resp_obj
+        self.validation_results: typing.Dict = {}
+        self.resp_data = ResponseData()
+        self.parser = parser
+
+        if  isinstance(resp_obj, Response):
+            self.resp_data.text = resp_obj.text
+            try:
+                self.resp_data.json_data = resp_obj.json()
+            except Exception:
+                logger.warning(f"响应数据不是json格式，无法提取json数据")
+            self.resp_data.data = resp_obj.content
+            self.resp_data.headers = resp_obj.headers
+            self.resp_data.cookies = resp_obj.cookies.get_dict()
+            self.resp_data.status_code = resp_obj.status_code
+            self.resp_data.duration = resp_obj.elapsed.total_seconds()
+
+
+        if isinstance(resp_obj, ResponseData):
+            self.resp_data = resp_obj
+
+        # self.resp_obj = resp_obj
+        self.validation_results: typing.Dict = {}
 
     def __getattr__(self, key):
         if key in ["json", "content", "body"]:
             try:
-                value = self.resp_obj.json()
+                value = self.resp_data.json_data
             except ValueError:
-                value = self.resp_obj.content
+                value = self.resp_data.json_data
         elif key == "cookies":
-            value = self.resp_obj.cookies.get_dict()
+            value = self.resp_data.cookies
         else:
             try:
-                value = getattr(self.resp_obj, key)
+                value = getattr(self.resp_data, key)
             except AttributeError:
                 err_msg = "ResponseObject does not have attribute: {}".format(key)
                 logger.error(err_msg)
@@ -227,10 +264,10 @@ class ResponseObjectBase(object):
     def _search_jmespath(self, expr: str) -> typing.Any:
 
         resp_obj_meta = {
-            "status_code": self.resp_obj.status_code,
-            "headers": self.resp_obj.headers,
-            "cookies": self.cookies,
-            "body": self.body,
+            "status_code": self.resp_data.status_code,
+            "headers": self.resp_data.headers,
+            "cookies": self.resp_data.cookies,
+            "body": self.resp_data.json_data,
         }
         if not expr.startswith(tuple(resp_obj_meta.keys())):
             return expr
@@ -253,7 +290,7 @@ class ResponseObjectBase(object):
     def _search_jsonpath(self, expr: ExtractData) -> typing.Any:
         try:
             expr_path = expr.path.replace('"', "'")
-            check_value = jsonpath(self.body, expr_path)
+            check_value = jsonpath(self.resp_data.json_data, expr_path)
             if not check_value:
                 raise ValueError(f"💔{expr.path} 没有提取到数据！")
             if expr.continue_extract:

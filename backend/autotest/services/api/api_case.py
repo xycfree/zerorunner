@@ -142,6 +142,7 @@ class ApiCaseService:
         testcase = case_info.get_testcases()  # 获取执行环境、项目配置、测试用例数据信息
         summary = await sync_to_async(runner.run_tests, testcase)
         # summary = runner.get_summary()
+        summary.step_results = ReportService.parser_summary(summary.step_results)
         project_id = case_info.api_case.project_id
         module_id = case_info.api_case.module_id
         env_id = case_info.api_case.env_id
